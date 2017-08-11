@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
+use Carbon\Carbon;
 
 class DepotController extends Controller
 {
@@ -34,7 +36,61 @@ class DepotController extends Controller
      */
     public function store(Request $request)
     {
-        return response()->json($request);
+        $result = Validator( $request->all(), array(
+            'product_id'        => 'required|integer',
+            'qualityProduct'    => 'required|max:255:string',
+            'colorProduct'      => 'required|max:255:string',
+            'quantityProduct'   => 'required|integer',
+            'inputDate'         => 'nullable|date',
+            'priceProduct'      => 'required|integer',
+            'totalPrice'        => 'required|integer'
+        ));
+
+        if ( ! $result->fails()) {
+            $saler              = $request->input('saler');
+            $product_id         = $request->input('product_id');
+            $qualityProduct     = $request->input('qualityProduct');
+            $colorProduct       = $request->input('colorProduct');
+            $quantityProduct    = $request->input('quantityProduct');
+            $inputDate          = $request->input('inputDate');
+            $priceProduct       = $request->input('priceProduct');
+            $totalPrice         = $request->input('totalPrice');
+            $depotNote          = $request->input('depotNote');
+
+            if( DB::table('depots')
+                ->insert([
+                    'saler'             => $saler,
+                    'product_id'        => $product_id,
+                    'quality_product'    => $qualityProduct,
+                    'color_product'      => $colorProduct,
+                    'quantity_product'   => $quantityProduct,
+                    'input_date'         => Carbon::createFromFormat('d/m/Y', $inputDate)->toDateString(),
+                    'price_product'      => $priceProduct,
+                    'total_price'        => $totalPrice,
+                    'depot_note'         => $depotNote
+                ]))
+            {
+                $ob_quantityInStock = DB::table('products')
+                                    ->select('quantity_in_stock')
+                                    ->first();
+
+                DB::table('products')
+                    ->where('id', $product_id)
+                    ->update([
+                        'quantity_in_stock' => ($ob_quantityInStock->quantity_in_stock + $quantityProduct),
+                        'updated_at'        => Carbon::now()
+                        ]);
+
+                return response()->json([
+                    'message' => 'OK'
+                ]); 
+            }
+        }
+        else {
+            return response()->json([
+                'message' => 'NG'
+            ]);
+        }
     }
 
     /**

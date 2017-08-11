@@ -20,6 +20,7 @@ class CreateProductsTable extends Migration
             $table->string('product_name')->unique();
             $table->string('product_info')->nullable();
             $table->smallInteger('vendor_id')->unsigned();
+            $table->unsignedInteger('quantity_in_stock')->default(0);
             $table->timestamps();
 
             $table->foreign('vendor_id')->references('id')->on('categories');

@@ -53,11 +53,31 @@
 					        <div class="form-group">
 					        	<label for="productName" class="col-sm-3 control-label">Sản phẩm</label>
 					        	<div class="col-sm-9">
-						        	<select class="form-control" id="productName">
-				                  	</select>
+					        		<div class="col-sm-4">
+							        	<select class="form-control" id="productName">
+					                  	</select>
+				                  	</div>
+					        		<div class="col-sm-4">
+					        			<select class="form-control" id="storageProduct">
+					        				<option value="0">Bộ nhớ</option>
+					        				<option value="1">16 GB</option>
+					        				<option value="2">32 GB</option>
+					        				<option value="3">64 GB</option>
+					        				<option value="4">128 GB</option>
+					        				<option value="5">256 GB</option>
+					                  	</select>
+					        		</div>
+					        		<div class="col-sm-4">
+					        			<select class="form-control" id="storageProduct">
+					        				<option value="0">Chất lượng</option>
+					        				<option value="1">95 %</option>
+					        				<option value="2">99 %</option>
+					        				<option value="3">New</option>
+					                  	</select>
+					        		</div>
 			                  	</div>
 					        </div>
-					        <div class="form-group">
+					       {{--  <div class="form-group">
 					        	<label for="qualityProduct" class="col-sm-3 control-label">Chất lượng</label>
 					        	<div class="col-sm-9">
 					        		<div class="col-sm-4">
@@ -73,7 +93,7 @@
 							        	<label for="quality_new" class="control-label"> New</label>
 						        	</div>
 			                  	</div>
-					        </div>
+					        </div> --}}
 					        <div class="form-group">
 					        	<label for="colorProduct" class="col-sm-3 control-label">Màu sắc</label>
 					        	<div class="col-sm-9">
