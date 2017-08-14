@@ -19,6 +19,7 @@ class CreateDepotsTable extends Migration
             $table->smallIncrements('id');
             $table->string('saler')->nullable();
             $table->smallInteger('product_id')->unsigned();
+            $table->string('storage_product');
             $table->string('quality_product');
             $table->string('color_product');
             $table->smallInteger('quantity_product')->unsigned();

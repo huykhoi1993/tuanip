@@ -38,10 +38,10 @@ class DepotController extends Controller
     {
         $result = Validator( $request->all(), array(
             'product_id'        => 'required|integer',
+            'storageProduct'    => 'required|max:255:string',
             'qualityProduct'    => 'required|max:255:string',
             'colorProduct'      => 'required|max:255:string',
             'quantityProduct'   => 'required|integer',
-            'inputDate'         => 'nullable|date',
             'priceProduct'      => 'required|integer',
             'totalPrice'        => 'required|integer'
         ));
@@ -49,6 +49,7 @@ class DepotController extends Controller
         if ( ! $result->fails()) {
             $saler              = $request->input('saler');
             $product_id         = $request->input('product_id');
+            $storageProduct     = $request->input('storageProduct');
             $qualityProduct     = $request->input('qualityProduct');
             $colorProduct       = $request->input('colorProduct');
             $quantityProduct    = $request->input('quantityProduct');
@@ -59,8 +60,9 @@ class DepotController extends Controller
 
             if( DB::table('depots')
                 ->insert([
-                    'saler'             => $saler,
-                    'product_id'        => $product_id,
+                    'saler'              => $saler,
+                    'product_id'         => $product_id,
+                    'storage_product'    => $storageProduct,
                     'quality_product'    => $qualityProduct,
                     'color_product'      => $colorProduct,
                     'quantity_product'   => $quantityProduct,

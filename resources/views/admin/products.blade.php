@@ -24,6 +24,7 @@
 						<td>Mã</td>
 						<td>Tên sản phẩm</td>
 						<td>Nhà sản xuất</td>
+						<td>Số lượng tại kho</td>
 						<td>Ghi chú</td>
 						<td>Ngày tạo</td>
 					</tr>
@@ -55,6 +56,12 @@
 								<label for="product_name" class="col-sm-3 control-label">Tên sản phẩm</label>
 								<div class="col-sm-9">
 									<input type="text" class="form-control" id="product_name" placeholder="Tên sản phẩm (Ex. iphone 5, galaxy s7, iphone 6+...)">
+								</div>
+					        </div>
+					        <div class="form-group">
+								<label for="quantity_in_stock" class="col-sm-3 control-label">Số lượng trong kho</label>
+								<div class="col-sm-9">
+									<input type="number" value="0" class="form-control" id="quantity_in_stock" placeholder="Nhập số lượng hiện có trong kho">
 								</div>
 					        </div>
 					        <div class="form-group">
@@ -90,7 +97,7 @@
 					        <div class="form-group">
 					            <label for="info_productName" class="col-sm-3 control-label">Tên sản phẩm</label>
 					            <div class="col-sm-9">
-					                <input type="text" class="form-control" id="info_productName" placeholder="Tên sản phẩm (Ex. iphone6, ipad mini, ...)">
+					                <input type="text" class="form-control" id="info_productName">
 					            </div>
 					        </div>
 					        <div class="form-group">
@@ -99,6 +106,12 @@
 						        	<select class="form-control" id="info_vendorName">
 				                  	</select>
 			                  	</div>
+					        </div>
+					        <div class="form-group">
+								<label for="info_quantity_in_stock" class="col-sm-3 control-label">Số lượng trong kho</label>
+								<div class="col-sm-9">
+									<input type="number" value="0" class="form-control" id="info_quantity_in_stock">
+								</div>
 					        </div>
 					        <div class="form-group">
 					            <label for="info_productNote" class="col-sm-3 control-label">Ghi chú</label>
@@ -161,6 +174,7 @@
 	$('#btn_save_product').on('click', function(){
 		var vendor_id	 = $('#vendor').val();
 		var product_name = $('#product_name').val();
+		var quantity_in_stock = $('#quantity_in_stock').val();
 		var product_info = $('#product_info').val();
 
 		$.ajax({
@@ -169,11 +183,13 @@
 			data: { 
 				vendor_id: vendor_id,
 				product_name: product_name,
+				quantity_in_stock: quantity_in_stock,
 				product_info: product_info
 			},
 		})
 		.done(function(data) {
 			$('#product_name').val('');
+			$('#quantity_in_stock').val('');
 			$('#product_info').val('');
 			$('#create_product').modal('toggle');
 			$('#products-table').DataTable().ajax.reload();
@@ -213,7 +229,8 @@
     $('#products-table tbody').on('click', 'tr', function(e){
     	$('#info_product').modal('toggle');
 		$('#info_productName').val($(this).find("td:eq(1)").html());
-		$('#info_categoryNote').val($(this).find("td:eq(3)").html());
+		$('#info_quantity_in_stock').val($(this).find("td:eq(3)").html());
+		$('#info_categoryNote').val($(this).find("td:eq(4)").html());
 
 		var vendor = $(this).find("td:eq(2)").html();
 		var id = $(this).find("td:eq(0)").html();
@@ -270,6 +287,7 @@
 	        url =  url.replace(':id', id);
 			var vendor_id = $('#info_vendorName').val();
 			var product_name = $('#info_productName').val();
+			var quantity_in_stock = $('#info_quantity_in_stock').val();
 			var product_info = $('#info_productNote').val();
 
 			$.ajax({
@@ -279,6 +297,7 @@
 					method: 'PUT',
 					vendor_id: vendor_id,
 					product_name: product_name,
+					quantity_in_stock: quantity_in_stock,
 					product_info: product_info
 				}
 			})

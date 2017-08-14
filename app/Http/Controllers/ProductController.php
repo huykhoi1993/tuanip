@@ -43,10 +43,11 @@ class ProductController extends Controller
 
         if ( ! $result->fails()) {
             DB::table('products')->insert([
-                'product_name' => $request->input('product_name'),
-                'product_info' => $request->input('product_info'),
-                'vendor_id'     => $request->input('vendor_id'),
-                'created_at'    => Carbon::now()
+                'product_name'      => $request->input('product_name'),
+                'product_info'      => $request->input('product_info'),
+                'vendor_id'         => $request->input('vendor_id'),
+                'quantity_in_stock' => $request->input('quantity_in_stock'),
+                'created_at'        => Carbon::now()
             ]);
 
             return response()->json([
@@ -95,10 +96,11 @@ class ProductController extends Controller
             $results = DB::table('products')
                 ->where('id', '=', $id)
                 ->update([
-                    'vendor_id'     => is_numeric($request->input('vendor_id')) ? $request->input('vendor_id') : NULL,
-                    'product_name' => $request->input('product_name'),
-                    'product_info' => $request->input('product_info'),
-                    'updated_at'    => Carbon::now()
+                    'vendor_id'         => is_numeric($request->input('vendor_id')) ? $request->input('vendor_id') : NULL,
+                    'product_name'      => $request->input('product_name'),
+                    'product_info'      => $request->input('product_info'),
+                    'quantity_in_stock' => $request->input('quantity_in_stock'),
+                    'updated_at'        => Carbon::now()
                 ]);
             if ($results) {
                 return response()->json([
@@ -148,7 +150,7 @@ class ProductController extends Controller
      */
     public function getProducts()
     {
-        $products = DB::select("select id, product_name, (select category_name from categories t2 where t2.id = t1.vendor_id) as vendor_name, product_info, created_at from products t1 where 1");
+        $products = DB::select("select id, product_name, (select category_name from categories t2 where t2.id = t1.vendor_id) as vendor_name, quantity_in_stock, product_info, created_at from products t1 where 1");
 
         return Datatables::of($products)
             ->editColumn('created_at', function ($product) {

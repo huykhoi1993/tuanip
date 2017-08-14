@@ -5,6 +5,21 @@
 <link rel="stylesheet" href="{{ asset('plugins/iCheck/all.css') }}">
 <!-- bootstrap datepicker -->
 <link rel="stylesheet" href="{{ asset('plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
+<style type="text/css">
+@media screen and (min-width: 768px), screen and (min-height: 768px) {
+	#div_productName, 
+	#div_storageProduct, 
+	#div_qualityProduct {
+		margin: 0;
+		padding-left: 0;
+	}
+
+	#div_qualityProduct {
+		padding-right: 0;
+	}
+}	
+
+</style>
 @endsection
 
 @section('content')
@@ -53,11 +68,11 @@
 					        <div class="form-group">
 					        	<label for="productName" class="col-sm-3 control-label">Sản phẩm</label>
 					        	<div class="col-sm-9">
-					        		<div class="col-sm-4">
+					        		<div id="div_productName" class="col-sm-4 form-group">
 							        	<select class="form-control" id="productName">
 					                  	</select>
 				                  	</div>
-					        		<div class="col-sm-4">
+					        		<div id="div_storageProduct" class="col-sm-4 form-group">
 					        			<select class="form-control" id="storageProduct">
 					        				<option value="0">Bộ nhớ</option>
 					        				<option value="1">16 GB</option>
@@ -67,8 +82,8 @@
 					        				<option value="5">256 GB</option>
 					                  	</select>
 					        		</div>
-					        		<div class="col-sm-4">
-					        			<select class="form-control" id="storageProduct">
+					        		<div id="div_qualityProduct" class="col-sm-4 form-group">
+					        			<select class="form-control" id="qualityProduct">
 					        				<option value="0">Chất lượng</option>
 					        				<option value="1">95 %</option>
 					        				<option value="2">99 %</option>
@@ -77,23 +92,6 @@
 					        		</div>
 			                  	</div>
 					        </div>
-					       {{--  <div class="form-group">
-					        	<label for="qualityProduct" class="col-sm-3 control-label">Chất lượng</label>
-					        	<div class="col-sm-9">
-					        		<div class="col-sm-4">
-							        	<input id="quality_95" class="form-control" name="qualityProduct" type="radio" value="1">
-							        	<label for="quality_95" class="control-label"> 95%</label>
-						        	</div>
-						        	<div class="col-sm-4">
-							        	<input id="quality_99" class="form-control" name="qualityProduct" type="radio" value="2" checked>
-							        	<label for="quality_99" class="control-label"> 99%</label>
-						        	</div>
-						        	<div class="col-sm-4">
-							        	<input id="quality_new" class="form-control" name="qualityProduct" type="radio" value="3">
-							        	<label for="quality_new" class="control-label"> New</label>
-						        	</div>
-			                  	</div>
-					        </div> --}}
 					        <div class="form-group">
 					        	<label for="colorProduct" class="col-sm-3 control-label">Màu sắc</label>
 					        	<div class="col-sm-9">
@@ -241,47 +239,58 @@
 	});
 
 	$('#btn_save_input_depot').on('click', function(){
-		var saler = $('#saler').val();
-		var product_id = $('#productName').val();
-		var id = $(":radio[name=qualityProduct]:checked").attr("id");
-		var qualityProduct = $('label[for='+id+']').text();
-		var colorProduct = $('#colorProduct').find(":selected").text();
-		var quantityProduct = $('#quantityProduct').val();
-		var inputDate = $('#inputDate').val();
-		var priceProduct = $('#priceProduct').val();
-		var totalPrice = $('#totalPrice').val();
-		var depotNote = $('#depotNote').val();
-		
-		var data = {
-			saler: saler,
-			product_id: product_id,
-			qualityProduct: qualityProduct,
-			colorProduct: colorProduct,
-			quantityProduct: quantityProduct,
-			inputDate: inputDate,
-			priceProduct: priceProduct,
-			totalPrice: totalPrice,
-			depotNote: depotNote
-		};
-
-{{-- 		console.log('saler :' + saler);
-		console.log('product_id :' + product_id);
-		console.log('qualityProduct :' + qualityProduct);
-		console.log('colorProduct : ' + colorProduct);
-		console.log('quantityProduct : ' + quantityProduct);
-		console.log('inputDate : ' + inputDate);
-		console.log('priceProduct : ' + priceProduct);
-		console.log('totalPrice : ' + totalPrice);
-		console.log('depotNote : ' + depotNote); --}}
-
-		$.ajax({
-			url: '{{ route('depots.store') }}',
-			type: 'POST',
-			data: data,
-		})
-		.done(function(data) {
-			console.log(data);
-		});
-		
+		if ( $('#storageProduct').val() != 0 && $('#qualityProduct').val() != 0){
+			var saler = $('#saler').val();
+			var product_id = $('#productName').val();
+			var storageProduct = $('#storageProduct').find(":selected").text();
+			var qualityProduct = $('#qualityProduct').find(":selected").text();
+			var colorProduct = $('#colorProduct').find(":selected").text();
+			var quantityProduct = $('#quantityProduct').val();
+			var inputDate = $('#inputDate').val();
+			var priceProduct = $('#priceProduct').val();
+			var totalPrice = $('#totalPrice').val();
+			var depotNote = $('#depotNote').val();
+			
+			var data = {
+				saler: saler,
+				product_id: product_id,
+				storageProduct: storageProduct,
+				qualityProduct: qualityProduct,
+				colorProduct: colorProduct,
+				quantityProduct: quantityProduct,
+				inputDate: inputDate,
+				priceProduct: priceProduct,
+				totalPrice: totalPrice,
+				depotNote: depotNote
+			};
+	
+			{{-- console.log(data); --}}
+			$.ajax({
+				url: '{{ route('depots.store') }}',
+				type: 'POST',
+				data: data,
+			})
+			.done(function(data) {
+				$('#input_depot').modal('toggle');
+				$('#saler').val('');
+				$('#productName').val(0);
+				$('#storageProduct').val(0);
+				$('#qualityProduct').val(0);
+				$('#colorProduct').val(0);
+				$('#quantityProduct').val(1);
+				$('#inputDate').val("{{ \Carbon\Carbon::now()->format('d/m/Y') }}");
+				$('#priceProduct').val('');
+				$('#totalPrice').val('');
+				$('#depotNote').val('');
+			});
+		}
+		else {
+			if ( $('#storageProduct').val() == 0 ) {
+				$('#storageProduct').focus();
+			}
+			else {
+				$('#qualityProduct').focus();
+			}
+		}
 	});
 @endsection
