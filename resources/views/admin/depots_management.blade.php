@@ -6,6 +6,10 @@
 <!-- bootstrap datepicker -->
 <link rel="stylesheet" href="{{ asset('plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
 <style type="text/css">
+table#depots-table thead tr td {
+	font-weight: bold;
+}
+
 @media screen and (min-width: 768px), screen and (min-height: 768px) {
 	#div_productName, 
 	#div_storageProduct, 
@@ -18,7 +22,6 @@
 		padding-right: 0;
 	}
 }	
-
 </style>
 @endsection
 
@@ -27,20 +30,30 @@
 		<button class="btn btn-primary btn-flat" id="btn_input_depot" data-toggle="modal" data-target="#input_depot">
 			<i class="fa fa-arrow-down"></i> Nhập hàng
 		</button>
+		<button class="btn btn-success btn-flat" id="btn_output_depot" data-toggle="modal" data-target="#output_depot">
+			<i class="fa fa-arrow-up"></i> Xuất hàng
+		</button>
 	</div>
 	<div class="box">
 		<div class="box-header">
 			<h3 class="box-title text-info">Danh sách các đơn hàng</h3>
 		</div>
 		<div class="box-body">
-			<table id="products-table" class="table table-bordered table-hover">
+			<table id="depots-table" class="table table-bordered table-striped dataTable">
 				<thead>
 					<tr>
-						<td>Mã</td>
-						<td>Tên sản phẩm</td>
-						<td>Nhà sản xuất</td>
+						<td>Mã đơn</td>
+						<td>Người bán (mua)</td>
+						<td>Sản phẩm</td>
+						<td>Bộ nhớ</td>
+						<td>Màu</td>
+						<td>Loại hàng</td>
+						<td>Giá</td>
+						<td>Số lượng</td>
+						<td>Thành tiền</td>
 						<td>Ghi chú</td>
-						<td>Ngày tạo</td>
+						<td>Ngày tạo đơn</td>
+						<td>Đơn nhập</td>
 					</tr>
 				</thead>
 			</table>
@@ -160,7 +173,71 @@
 		    </div>
 	  	</div>
 	</div>
-	<!-- Modal Input Depot-->
+	<!-- /Modal Input Depot-->
+	
+	<!-- Modal Output Depot-->
+	<div id="output_depot" class="modal fade" role="dialog">
+	  	<div class="modal-dialog">
+	    <!-- Modal content-->
+		    <div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title text-green">Thêm mới đơn hàng xuất kho</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+					    <div class="box-body">
+					    	<div class="form-group">
+					        	<label for="buyer" class="col-sm-3 control-label">Hàng xuất cho</label>
+					        	<div class="col-sm-9">
+						        	<input type="text" class="form-control" id="buyer" placeholder="Nhập người mua">
+			                  	</div>
+					        </div>
+					        <div class="form-group">
+					        	<label for="productName" class="col-sm-3 control-label">Sản phẩm</label>
+					        	<div class="col-sm-9">
+					        		<div id="div_productName" class="col-sm-4 form-group">
+							        	<select class="form-control" id="output_productName">
+					                  	</select>
+				                  	</div>
+					        		<div id="div_storageProduct" class="col-sm-4 form-group">
+					        			<select class="form-control" id="output_storageProduct">
+					        				<option value="0">Bộ nhớ</option>
+					        				<option value="1">16 GB</option>
+					        				<option value="2">32 GB</option>
+					        				<option value="3">64 GB</option>
+					        				<option value="4">128 GB</option>
+					        				<option value="5">256 GB</option>
+					                  	</select>
+					        		</div>
+					        		<div id="div_qualityProduct" class="col-sm-4 form-group">
+					        			<select class="form-control" id="output_qualityProduct">
+					        				<option value="0">Chất lượng</option>
+					        				<option value="1">95 %</option>
+					        				<option value="2">99 %</option>
+					        				<option value="3">New</option>
+					                  	</select>
+					        		</div>
+			                  	</div>
+					        </div>
+					        
+					        <div class="form-group">
+					            <label for="" class="col-sm-3 control-label">Ghi chú</label>
+					            <div class="col-sm-9">
+					                <textarea rows="3" class="form-control" id="" placeholder="Nhập thông tin về đơn hàng"></textarea>
+					            </div>
+					        </div>
+					    </div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-rotate-left"></i> Hủy bỏ</button>
+					<button type="button" id="" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
+				</div>
+		    </div>
+	  	</div>
+	</div>
+	<!-- /Modal Output Depot-->
 @endsection
 
 @section('lib_js_ext')
@@ -241,7 +318,7 @@
 	$('#btn_save_input_depot').on('click', function(){
 		if ( $('#storageProduct').val() != 0 && $('#qualityProduct').val() != 0){
 			var saler = $('#saler').val();
-			var product_id = $('#productName').val();
+			var productId = $('#productName').val();
 			var storageProduct = $('#storageProduct').find(":selected").text();
 			var qualityProduct = $('#qualityProduct').find(":selected").text();
 			var colorProduct = $('#colorProduct').find(":selected").text();
@@ -252,8 +329,9 @@
 			var depotNote = $('#depotNote').val();
 			
 			var data = {
+				isInput: 1,
 				saler: saler,
-				product_id: product_id,
+				productId: productId,
 				storageProduct: storageProduct,
 				qualityProduct: qualityProduct,
 				colorProduct: colorProduct,
@@ -264,7 +342,6 @@
 				depotNote: depotNote
 			};
 	
-			{{-- console.log(data); --}}
 			$.ajax({
 				url: '{{ route('depots.store') }}',
 				type: 'POST',
@@ -282,6 +359,7 @@
 				$('#priceProduct').val('');
 				$('#totalPrice').val('');
 				$('#depotNote').val('');
+				$('#depots-table').DataTable().ajax.reload();
 			});
 		}
 		else {
@@ -293,4 +371,34 @@
 			}
 		}
 	});
+
+	$('#depots-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+			url: '{{ route('depots') }}',
+			type: 'post'
+        }, 
+        language: {
+		    "emptyTable":     "{{ trans('datatables.emptyTable') }}",
+		    "info":           "{{ trans('datatables.info') }}",
+		    "infoEmpty":      "{{ trans('datatables.infoEmpty') }}",
+		    "infoFiltered":   "{{ trans('datatables.infoFiltered') }}",
+		    "lengthMenu":     "{{ trans('datatables.lengthMenu') }}",
+		    "loadingRecords": "{{ trans('datatables.loadingRecords') }}",
+		    "processing":     "{{ trans('datatables.processing') }}",
+		    "search":         "{{ trans('datatables.search') }}",
+		    "zeroRecords":    "{{ trans('datatables.zeroRecords') }}",
+		    "paginate": {
+		        "first":      "{{ trans('datatables.paginate.first') }}",
+		        "last":       "{{ trans('datatables.paginate.last') }}",
+		        "next":       "{{ trans('datatables.paginate.next') }}",
+		        "previous":   "{{ trans('datatables.paginate.previous') }}"
+		    },
+		    "aria": {
+		        "sortAscending":  "{{ trans('datatables.aria.sortAscending') }}",
+		        "sortDescending": "{{ trans('datatables.aria.sortDescending') }}"
+		    }
+		}
+    });
 @endsection

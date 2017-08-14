@@ -48,7 +48,7 @@ Route::group(['prefix' => 'admin'], function() {
     Route::group(['prefix' => 'product'], function(){
         Route::get('/', 'ProductController@index')->name('products.index');
         Route::post('/', 'ProductController@store')->name('products.store');
-        Route::get('/products', 'ProductController@getProducts')->name('products');
+        Route::post('/products', 'ProductController@getProducts')->name('products');
         Route::get('/productsname', 'ProductController@getProductsName')->name('productsname');
         Route::post('/{id}/delete', 'ProductController@deleteProduct')->name('products.delete');
         Route::post('/{id}', 'ProductController@updateProduct')->name('products.update');
@@ -64,6 +64,13 @@ Route::group(['prefix' => 'admin'], function() {
     Route::group(['prefix' => 'depot'], function(){
         Route::get('/', 'DepotController@index')->name('depots.index');
         Route::post('/', 'DepotController@store')->name('depots.store');
+        Route::post('/depots', 'DepotController@getDepots')->name('depots');
+    });
+
+    Route::group(['prefix' => 'color'], function(){
+        Route::get('/', 'ColorController@index')->name('colors.index');
+        Route::post('/', 'ColorController@store')->name('colors.store');
+        Route::post('/colors', 'ColorController@getColors')->name('colors.getcolors');;
     });
 });
 

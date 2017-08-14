@@ -2,6 +2,24 @@
 
 @section('lib_css_ext')
 <link rel="stylesheet" href="{{ asset('plugins/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+<style type="text/css">
+table#products-table thead tr td {
+	font-weight: bold;
+}	
+
+@media screen and (min-width: 768px), screen and (min-height: 768px) {
+	#colorProduct, 
+	#storageProduct, 
+	#qualityProduct {
+		margin: 0;
+		padding-left: 0;
+	}
+
+	#qualityProduct {
+		padding-right: 0;
+	}
+}
+</style>
 @endsection
 
 @section('title_header')
@@ -22,7 +40,10 @@
 				<thead>
 					<tr>
 						<td>Mã</td>
-						<td>Tên sản phẩm</td>
+						<td>Sản phẩm</td>
+						<td>Màu</td>
+						<td>Bộ nhớ</td>
+						<td>Chất lượng</td>
 						<td>Nhà sản xuất</td>
 						<td>Số lượng tại kho</td>
 						<td>Ghi chú</td>
@@ -59,7 +80,123 @@
 								</div>
 					        </div>
 					        <div class="form-group">
-								<label for="quantity_in_stock" class="col-sm-3 control-label">Số lượng trong kho</label>
+					        	<label for="product_name" class="col-sm-3 control-label">Thuộc tính</label>
+					        	<div class="col-sm-9">
+					        		<div id="colorProduct" class="col-sm-4 form-group">
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="1">Xám
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="2">Bạc
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="3">Vàng
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="4">Hồng
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="5">Đen bóng
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="6">Đen nhám
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="7">Đỏ
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="8">Khác
+									        </label>
+									    </div>
+				                  	</div>
+					        		<div id="storageProduct" class="col-sm-4 form-group">
+					        			<div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="1">16 GB
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="2">32 GB
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="3">64 GB
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="4">128 GB
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="5">256 GB
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="6">Khác
+									        </label>
+									    </div>
+					        		</div>
+					        		<div id="qualityProduct" class="col-sm-4 form-group">
+					        			<div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="1">95 %
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="2">99 %
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="3">Đổi BH
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="4">Trôi BH
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="5">CPO
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="6">Brandnew
+									        </label>
+									    </div>
+									    <div class="checkbox">
+									        <label>
+									            <input type="checkbox" id="" value="7">Khác
+									        </label>
+									    </div>
+					        		</div>
+			                  	</div>
+					        </div>
+					        <div class="form-group">
+								<label for="quantity_in_stock" class="col-sm-3 control-label">Số lượng ở kho</label>
 								<div class="col-sm-9">
 									<input type="number" value="0" class="form-control" id="quantity_in_stock" placeholder="Nhập số lượng hiện có trong kho">
 								</div>
@@ -174,35 +311,61 @@
 	$('#btn_save_product').on('click', function(){
 		var vendor_id	 = $('#vendor').val();
 		var product_name = $('#product_name').val();
+		var colorProduct = $('#colorProduct').find(":selected").text();
+		var storageProduct = $('#storageProduct').find(":selected").text();
+		var qualityProduct = $('#qualityProduct').find(":selected").text();
 		var quantity_in_stock = $('#quantity_in_stock').val();
 		var product_info = $('#product_info').val();
 
-		$.ajax({
-			url: '{{ route('products.store') }}',
-			type: 'POST',
-			data: { 
-				vendor_id: vendor_id,
-				product_name: product_name,
-				quantity_in_stock: quantity_in_stock,
-				product_info: product_info
-			},
-		})
-		.done(function(data) {
-			$('#product_name').val('');
-			$('#quantity_in_stock').val('');
-			$('#product_info').val('');
-			$('#create_product').modal('toggle');
-			$('#products-table').DataTable().ajax.reload();
-		})
-		.fail(function() {
-			console.log("error");
-		});
+		{{-- if( $('#colorProduct').val() != 0 && $('#storageProduct').val() != 0 && $('#qualityProduct').val() != 0){
+			var data = { 
+					vendor_id: vendor_id,
+					product_name: product_name,
+					colorProduct: colorProduct,
+					storageProduct: storageProduct,
+					qualityProduct: qualityProduct,
+					quantity_in_stock: quantity_in_stock,
+					product_info: product_info
+				};
+
+			console.log(data);
+			
+			$.ajax({
+				url: '{{ route('products.store') }}',
+				type: 'POST',
+				data: data,
+			})
+			.done(function(data) {
+				$('#product_name').val('');
+				$('#colorProduct').val(0);
+				$('#storageProduct').val(0);
+				$('#qualityProduct').val(0);
+				$('#quantity_in_stock').val('');
+				$('#product_info').val('');
+				$('#create_product').modal('toggle');
+				$('#products-table').DataTable().ajax.reload();
+			}) --}}
+		{{-- }
+		else {
+			if( $('#colorProduct').val() == 0){
+				$('#colorProduct').focus();
+			}
+			else if( $('#storageProduct').val() == 0){
+				$('#storageProduct').focus();
+			}
+			else {
+				$('#qualityProduct').focus();
+			}
+		} --}}
 	});
 
 	$('#products-table').DataTable({
         processing: true,
         serverSide: true,
-        ajax: '{{ route('products') }}',
+        ajax: {
+        	url: '{{ route('products') }}',
+        	type: 'post'
+        },
         language: {
 		    "emptyTable":     "{{ trans('datatables.emptyTable') }}",
 		    "info":           "{{ trans('datatables.info') }}",
@@ -310,6 +473,10 @@
 			})
 		});
 
+    });
+
+    $('#btn_add_color').on('click', function(){
+		alert(1);
     });
 
 @endsection

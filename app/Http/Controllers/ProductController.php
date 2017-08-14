@@ -44,6 +44,9 @@ class ProductController extends Controller
         if ( ! $result->fails()) {
             DB::table('products')->insert([
                 'product_name'      => $request->input('product_name'),
+                'color_product'     => $request->input('colorProduct'),
+                'storage_product'   => $request->input('storageProduct'),
+                'quality_product'   => $request->input('qualityProduct'),
                 'product_info'      => $request->input('product_info'),
                 'vendor_id'         => $request->input('vendor_id'),
                 'quantity_in_stock' => $request->input('quantity_in_stock'),
@@ -150,7 +153,7 @@ class ProductController extends Controller
      */
     public function getProducts()
     {
-        $products = DB::select("select id, product_name, (select category_name from categories t2 where t2.id = t1.vendor_id) as vendor_name, quantity_in_stock, product_info, created_at from products t1 where 1");
+        $products = DB::select("select id, product_name, color_product, storage_product, quality_product, (select category_name from categories t2 where t2.id = t1.vendor_id) as vendor_name, quantity_in_stock, product_info, created_at from products t1 where 1");
 
         return Datatables::of($products)
             ->editColumn('created_at', function ($product) {

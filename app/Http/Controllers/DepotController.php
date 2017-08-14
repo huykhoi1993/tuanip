@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use DB;
 use Carbon\Carbon;
+use Datatables;
 
 class DepotController extends Controller
 {
@@ -37,18 +38,19 @@ class DepotController extends Controller
     public function store(Request $request)
     {
         $result = Validator( $request->all(), array(
-            'product_id'        => 'required|integer',
+            'productId'        => 'required|integer',
             'storageProduct'    => 'required|max:255:string',
             'qualityProduct'    => 'required|max:255:string',
             'colorProduct'      => 'required|max:255:string',
             'quantityProduct'   => 'required|integer',
             'priceProduct'      => 'required|integer',
-            'totalPrice'        => 'required|integer'
+            'totalPrice'        => 'required|integer',
+            'isInput'           => 'required|integer'
         ));
 
         if ( ! $result->fails()) {
             $saler              = $request->input('saler');
-            $product_id         = $request->input('product_id');
+            $productId          = $request->input('productId');
             $storageProduct     = $request->input('storageProduct');
             $qualityProduct     = $request->input('qualityProduct');
             $colorProduct       = $request->input('colorProduct');
@@ -57,11 +59,12 @@ class DepotController extends Controller
             $priceProduct       = $request->input('priceProduct');
             $totalPrice         = $request->input('totalPrice');
             $depotNote          = $request->input('depotNote');
+            $isInput          = $request->input('isInput');
 
             if( DB::table('depots')
                 ->insert([
                     'saler'              => $saler,
-                    'product_id'         => $product_id,
+                    'product_id'         => $productId,
                     'storage_product'    => $storageProduct,
                     'quality_product'    => $qualityProduct,
                     'color_product'      => $colorProduct,
@@ -69,7 +72,8 @@ class DepotController extends Controller
                     'input_date'         => Carbon::createFromFormat('d/m/Y', $inputDate)->toDateString(),
                     'price_product'      => $priceProduct,
                     'total_price'        => $totalPrice,
-                    'depot_note'         => $depotNote
+                    'depot_note'         => $depotNote,
+                    'is_input_depot'     => $isInput
                 ]))
             {
                 $ob_quantityInStock = DB::table('products')
@@ -77,7 +81,7 @@ class DepotController extends Controller
                                     ->first();
 
                 DB::table('products')
-                    ->where('id', $product_id)
+                    ->where('id', $productId)
                     ->update([
                         'quantity_in_stock' => ($ob_quantityInStock->quantity_in_stock + $quantityProduct),
                         'updated_at'        => Carbon::now()
@@ -138,5 +142,34 @@ class DepotController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    /**
+     * get all depots
+     *
+     * @param  none
+     * @return \Illuminate\Http\Response
+     */
+    public function getDepots()
+    {
+        $depots = DB::select("select id, saler, (select product_name from products t2 where t2.id = t1.product_id) as product_name, storage_product, color_product, quality_product, price_product, quantity_product, total_price, depot_note, input_date, is_input_depot from depots t1 where 1 ");
+
+        return Datatables::of($depots)
+            ->editColumn('input_date', function ($depot) {
+                return $depot->input_date ? with(new Carbon($depot->input_date))->format('d/m/Y') : '';
+            })
+            ->editColumn('is_input_depot', function ($depot) {
+                return $depot->is_input_depot == 1 ? 'Nhập' : 'Xuất';
+            })
+            ->editColumn('price_product', function ($depot) {
+                return number_format($depot->price_product, 0, ",", ".");
+            })
+            ->editColumn('depot_note', function ($depot) {
+                return substr($depot->depot_note, 0, 12);
+            })
+            ->editColumn('total_price', function ($depot) {
+                return number_format($depot->total_price, 0, ",", ".");
+            })
+            ->make();
     }
 }

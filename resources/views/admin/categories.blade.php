@@ -2,6 +2,11 @@
 
 @section('lib_css_ext')
 <link rel="stylesheet" href="{{ asset('plugins/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+<style type="text/css">
+table#categories-table thead tr td {
+	font-weight: bold;
+}	
+</style>
 @endsection
 
 @section('title_header')

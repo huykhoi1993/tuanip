@@ -27,6 +27,7 @@ class CreateDepotsTable extends Migration
             $table->unsignedInteger('price_product');
             $table->unsignedBigInteger('total_price');
             $table->string('depot_note')->nullable();
+            $table->enum('is_input_depot', [0, 1])->default(1);    
 
             $table->foreign('product_id')->references('id')->on('products');
         });
