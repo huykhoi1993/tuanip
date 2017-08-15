@@ -273,18 +273,16 @@ table#depots-table thead tr td {
 	
 	$('#btn_input_depot').on('click', function(){
 		getProductName();
-		setTimeout(function(){
-			var productName = $("#productName option:first").text();
-			getStoragesProduct( productName);
-			setTimeout(function(){
-				var storageProduct = $("#storageProduct option:first").text();
-				getQualitiesProduct( productName, storageProduct);
-				setTimeout(function(){
-					var qualityProduct = $("#qualityProduct option:first").text();
-					getColorsProduct( productName, storageProduct, qualityProduct);
-				}, 800);
-			}, 600);
-		}, 300);
+		
+		var productName = $("#productName option:first").text();
+		getStoragesProduct( productName);
+
+		var storageProduct = $("#storageProduct option:first").text();
+		getQualitiesProduct( productName, storageProduct);
+				
+		var qualityProduct = $("#qualityProduct option:first").text();
+		getColorsProduct( productName, storageProduct, qualityProduct);
+
 	});
 
 	$('#priceProduct, #totalPrice').inputmask("numeric", {
@@ -401,7 +399,8 @@ table#depots-table thead tr td {
     function getProductName(){
 		$.ajax({
 			url: '{{ route('productsname') }}',
-			type: 'GET'
+			type: 'GET',
+			async: false
 		})
 		.done(function(data) {
 			$('#productName')
@@ -422,6 +421,7 @@ table#depots-table thead tr td {
 		$.ajax({
 			url: '{{ route('storagesproduct') }}',
 			type: 'GET',
+			async: false,
 			data: {
 				product_name: product_name
 			}
@@ -445,6 +445,7 @@ table#depots-table thead tr td {
     	$.ajax({
 			url: '{{ route('qualitiesproduct') }}',
 			type: 'GET',
+			async: false,
 			data: {
 				product_name: product_name,
 				storage_product: storage_product
@@ -469,6 +470,7 @@ table#depots-table thead tr td {
     	$.ajax({
 			url: '{{ route('colorsproduct') }}',
 			type: 'GET',
+			async: false,
 			data: {
 				product_name: product_name,
 				storage_product: storage_product,
