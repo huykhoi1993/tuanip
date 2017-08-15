@@ -12,7 +12,7 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('test');
 });
 
 Route::get('users/{id}', function() {
@@ -50,6 +50,9 @@ Route::group(['prefix' => 'admin'], function() {
         Route::post('/', 'ProductController@store')->name('products.store');
         Route::post('/products', 'ProductController@getProducts')->name('products');
         Route::get('/productsname', 'ProductController@getProductsName')->name('productsname');
+        Route::get('/storagesproduct', 'ProductController@getStoragesProduct')->name('storagesproduct');
+        Route::get('/qualitiesproduct', 'ProductController@getQualitiesProduct')->name('qualitiesproduct');
+        Route::get('/colorsproduct', 'ProductController@getColorsProduct')->name('colorsproduct');
         Route::post('/{id}/delete', 'ProductController@deleteProduct')->name('products.delete');
         Route::post('/{id}', 'ProductController@updateProduct')->name('products.update');
     });

@@ -13,12 +13,20 @@ table#depots-table thead tr td {
 @media screen and (min-width: 768px), screen and (min-height: 768px) {
 	#div_productName, 
 	#div_storageProduct, 
-	#div_qualityProduct {
+	#div_qualityProduct,
+	#div_colorProduct,
+	#label_quantityProduct,
+	#div_quantityProduct {
 		margin: 0;
 		padding-left: 0;
 	}
 
-	#div_qualityProduct {
+	#label_quantityProduct {
+		text-align: right;
+	}
+
+	#div_qualityProduct,
+	#div_quantityProduct {
 		padding-right: 0;
 	}
 }	
@@ -82,25 +90,15 @@ table#depots-table thead tr td {
 					        	<label for="productName" class="col-sm-3 control-label">Sản phẩm</label>
 					        	<div class="col-sm-9">
 					        		<div id="div_productName" class="col-sm-4 form-group">
-							        	<select class="form-control" id="productName">
+							        	<select class="form-control" id="productName" disabled="true">
 					                  	</select>
 				                  	</div>
 					        		<div id="div_storageProduct" class="col-sm-4 form-group">
-					        			<select class="form-control" id="storageProduct">
-					        				<option value="0">Bộ nhớ</option>
-					        				<option value="1">16 GB</option>
-					        				<option value="2">32 GB</option>
-					        				<option value="3">64 GB</option>
-					        				<option value="4">128 GB</option>
-					        				<option value="5">256 GB</option>
+					        			<select class="form-control" id="storageProduct" disabled="true">
 					                  	</select>
 					        		</div>
 					        		<div id="div_qualityProduct" class="col-sm-4 form-group">
-					        			<select class="form-control" id="qualityProduct">
-					        				<option value="0">Chất lượng</option>
-					        				<option value="1">95 %</option>
-					        				<option value="2">99 %</option>
-					        				<option value="3">New</option>
+					        			<select class="form-control" id="qualityProduct" disabled="true">
 					                  	</select>
 					        		</div>
 			                  	</div>
@@ -108,22 +106,23 @@ table#depots-table thead tr td {
 					        <div class="form-group">
 					        	<label for="colorProduct" class="col-sm-3 control-label">Màu sắc</label>
 					        	<div class="col-sm-9">
-						        	<select class="form-control" id="colorProduct">
-						        		<option value="1">Vàng</option>
-						        		<option value="2">Xám</option>
-						        		<option value="3">Bạc</option>
-						        		<option value="4">Đen bóng</option>
-						        		<option value="5">Đen nhám</option>
-						        		<option value="6">Đỏ</option>
-				                  	</select>
+					        		<div id="div_colorProduct" class="col-sm-4 form-group">
+							        	<select class="form-control" id="colorProduct" disabled="true">
+					                  	</select>
+				                  	</div>
+					        		<div id="label_quantityProduct" class="col-sm-4 form-group">
+					        			<label class="control-label">Số lượng</label>
+					        		</div>
+					        		<div id="div_quantityProduct" class="col-sm-4 form-group">
+					                	<input type="number" min="1" value="1" class="form-control" id="quantityProduct">
+					        		</div>
 			                  	</div>
 					        </div>
-					        <div class="form-group">
-					            <label for="quantityProduct" class="col-sm-3 control-label">Số lượng</label>
+{{-- 					        <div class="form-group">
+					            
 					            <div class="col-sm-9">
-					                <input type="number" min="1" value="1" class="form-control" id="quantityProduct">
 					            </div>
-					        </div>
+					        </div> --}}
 					        <div class="form-group">
 					            <label for="inputDate" class="col-sm-3 control-label">Ngày nhập</label>
 					            <div class="col-sm-9">
@@ -244,6 +243,7 @@ table#depots-table thead tr td {
 <!-- DataTables -->
 <script src="{{ asset('plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+<!-- iCheck -->
 <script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
 <!-- InputMask -->
 <script src="{{ asset('plugins/inputmask/dist/jquery.inputmask.bundle.js') }}"></script>
@@ -261,34 +261,30 @@ table#depots-table thead tr td {
 
 	$('input').iCheck({
 	    checkboxClass: 'icheckbox_flat',
-	    radioClass: 'iradio_flat-green'
+	    radioClass: 'iradio_flat-blue'
 	});
 
-	//Date picker
+	{{-- Date picker --}}
     $('#inputDate').datepicker({
       autoclose: true,
       language: 'vi'
     });
+	{{-- End Date picker --}}
 	
 	$('#btn_input_depot').on('click', function(){
-		$.ajax({
-			url: '{{ route('productsname') }}',
-			type: 'GET'
-		})
-		.done(function(data) {
-			$('#productName')
-			    .find('option')
-			    .remove()
-			    .end();
-
-			$.each( data, function( key, object ) {
-				$('#productName').append($('<option>', { 
-			        value: object.id,
-			        text : object.product_name 
-			    }));
-			});
-			
-		});
+		getProductName();
+		setTimeout(function(){
+			var productName = $("#productName option:first").text();
+			getStoragesProduct( productName);
+			setTimeout(function(){
+				var storageProduct = $("#storageProduct option:first").text();
+				getQualitiesProduct( productName, storageProduct);
+				setTimeout(function(){
+					var qualityProduct = $("#qualityProduct option:first").text();
+					getColorsProduct( productName, storageProduct, qualityProduct);
+				}, 800);
+			}, 600);
+		}, 300);
 	});
 
 	$('#priceProduct, #totalPrice').inputmask("numeric", {
@@ -401,4 +397,96 @@ table#depots-table thead tr td {
 		    }
 		}
     });
+
+    function getProductName(){
+		$.ajax({
+			url: '{{ route('productsname') }}',
+			type: 'GET'
+		})
+		.done(function(data) {
+			$('#productName')
+			    .find('option')
+			    .remove()
+			    .end();
+			$('#productName').prop('disabled', false);
+			$.each( data, function( key, object ) {
+				$('#productName').append($('<option>', { 
+			        text : object.product_name 
+			    }));
+			});
+			
+		});
+    }
+
+    function getStoragesProduct( product_name){
+		$.ajax({
+			url: '{{ route('storagesproduct') }}',
+			type: 'GET',
+			data: {
+				product_name: product_name
+			}
+		})
+		.done(function(data) {
+			$('#storageProduct')
+			    .find('option')
+			    .remove()
+			    .end();
+			$('#storageProduct').prop('disabled', false);
+			$.each( data, function( key, object ) {
+				$('#storageProduct').append($('<option>', { 
+			        text : object.storage_product
+			    }));
+			});
+			
+		});
+    }
+
+    function getQualitiesProduct( product_name, storage_product){
+    	$.ajax({
+			url: '{{ route('qualitiesproduct') }}',
+			type: 'GET',
+			data: {
+				product_name: product_name,
+				storage_product: storage_product
+			}
+		})
+		.done(function(data) {
+			$('#qualityProduct')
+			    .find('option')
+			    .remove()
+			    .end();
+			$('#qualityProduct').prop('disabled', false);
+			$.each( data, function( key, object ) {
+				$('#qualityProduct').append($('<option>', { 
+			        text : object.quality_product
+			    }));
+			});
+			
+		});
+    }
+
+    function getColorsProduct( product_name, storage_product, quality_product){
+    	$.ajax({
+			url: '{{ route('colorsproduct') }}',
+			type: 'GET',
+			data: {
+				product_name: product_name,
+				storage_product: storage_product,
+				quality_product: quality_product
+			}
+		})
+		.done(function(data) {
+			$('#colorProduct')
+			    .find('option')
+			    .remove()
+			    .end();
+			$('#colorProduct').prop('disabled', false);
+			$.each( data, function( key, object ) {
+				$('#colorProduct').append($('<option>', { 
+			        text : object.color_product
+			    }));
+			});
+			
+		});
+    }
 @endsection

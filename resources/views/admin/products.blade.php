@@ -1,11 +1,19 @@
 @extends('admin.components.template')
 
 @section('lib_css_ext')
+<!-- DataTables -->
 <link rel="stylesheet" href="{{ asset('plugins/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+<!-- iCheck -->
+<link rel="stylesheet" href="{{ asset('plugins/iCheck/all.css') }}">
 <style type="text/css">
-table#products-table thead tr td {
+table#products-table thead tr td,
+.text-bold {
 	font-weight: bold;
-}	
+}
+
+.text-bold {
+	text-align: center;
+}
 
 @media screen and (min-width: 768px), screen and (min-height: 768px) {
 	#colorProduct, 
@@ -39,13 +47,14 @@ table#products-table thead tr td {
 			<table id="products-table" class="table table-bordered table-hover">
 				<thead>
 					<tr>
-						<td>Mã</td>
+						<td>Mã SP</td>
 						<td>Sản phẩm</td>
 						<td>Màu</td>
 						<td>Bộ nhớ</td>
-						<td>Chất lượng</td>
-						<td>Nhà sản xuất</td>
-						<td>Số lượng tại kho</td>
+						<td>Clượng</td>
+						<td>Loại</td>
+						<td>Nhà SX</td>
+						<td>Số máy</td>
 						<td>Ghi chú</td>
 						<td>Ngày tạo</td>
 					</tr>
@@ -83,115 +92,38 @@ table#products-table thead tr td {
 					        	<label for="product_name" class="col-sm-3 control-label">Thuộc tính</label>
 					        	<div class="col-sm-9">
 					        		<div id="colorProduct" class="col-sm-4 form-group">
-									    <div class="checkbox">
+					        			@foreach ( Config::get('array.COLORS'); as $color)
+										<div class="checkbox">
 									        <label>
-									            <input type="checkbox" id="" value="1">Xám
+									            <input type="checkbox" name="colors" value="{{ $color }}">  {{ $color }}
 									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="2">Bạc
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="3">Vàng
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="4">Hồng
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="5">Đen bóng
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="6">Đen nhám
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="7">Đỏ
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="8">Khác
-									        </label>
-									    </div>
+									    </div>					        				
+					        			@endforeach
 				                  	</div>
 					        		<div id="storageProduct" class="col-sm-4 form-group">
+					        			@foreach ( Config::get('array.STORAGES'); as $storage)
 					        			<div class="checkbox">
 									        <label>
-									            <input type="checkbox" id="" value="1">16 GB
+									            <input type="checkbox" name="storages" value="{{ $storage }}">  {{ $storage }}
 									        </label>
 									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="2">32 GB
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="3">64 GB
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="4">128 GB
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="5">256 GB
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="6">Khác
-									        </label>
-									    </div>
+									    @endforeach
 					        		</div>
 					        		<div id="qualityProduct" class="col-sm-4 form-group">
+					        			@foreach ( Config::get('array.QUALITIES'); as $quality)
 					        			<div class="checkbox">
 									        <label>
-									            <input type="checkbox" id="" value="1">95 %
+									            <input type="checkbox" name="qualities" value="{{ $quality }}">  {{ $quality }}
 									        </label>
 									    </div>
-									    <div class="checkbox">
+									    @endforeach
+									    @foreach ( Config::get('array.VERSIONS'); as $version)
+					        			<div class="radio">
 									        <label>
-									            <input type="checkbox" id="" value="2">99 %
+									            <input type="radio" name="versions" value="{{ $loop->index }}" checked>  {{ $version }}
 									        </label>
 									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="3">Đổi BH
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="4">Trôi BH
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="5">CPO
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="6">Brandnew
-									        </label>
-									    </div>
-									    <div class="checkbox">
-									        <label>
-									            <input type="checkbox" id="" value="7">Khác
-									        </label>
-									    </div>
+									    @endforeach
 					        		</div>
 			                  	</div>
 					        </div>
@@ -238,17 +170,42 @@ table#products-table thead tr td {
 					            </div>
 					        </div>
 					        <div class="form-group">
-					        	<label for="info_vendorName" class="col-sm-3 control-label">Hãng sản xuât</label>
+					        	<label for="info_vendorName" class="col-sm-3 control-label">Hãng sản xuất</label>
 					        	<div class="col-sm-9">
 						        	<select class="form-control" id="info_vendorName">
 				                  	</select>
 			                  	</div>
 					        </div>
 					        <div class="form-group">
-								<label for="info_quantity_in_stock" class="col-sm-3 control-label">Số lượng trong kho</label>
+								<label for="info_quantity_in_stock" class="col-sm-3 control-label">Số lượng</label>
 								<div class="col-sm-9">
 									<input type="number" value="0" class="form-control" id="info_quantity_in_stock">
 								</div>
+					        </div>
+					        <div class="form-group">
+					        	<label for="product_name" class="col-sm-3 control-label">Thuộc tính</label>
+					        	<div class="col-sm-9">
+					        		<div id="colorProduct" class="col-sm-3 form-group">
+									    <div class="checkbox">
+									        <p class="text-bold" id="info_colorProduct"></p>
+									    </div>
+				                  	</div>
+					        		<div id="storageProduct" class="col-sm-3 form-group">
+					        			<div class="checkbox">
+									        <p class="text-bold" id="info_storageProduct"></p>
+									    </div>
+					        		</div>
+					        		<div id="qualityProduct" class="col-sm-3 form-group">
+					        			<div class="checkbox">
+									        <p class="text-bold" id="info_qualityProduct"></p>
+									    </div>
+								    </div>
+								    <div id="qualityProduct" class="col-sm-3 form-group">
+					        			<div class="checkbox">
+									        <p class="text-bold" id="info_versionProduct"></p>
+									    </div>
+					        		</div>
+			                  	</div>
 					        </div>
 					        <div class="form-group">
 					            <label for="info_productNote" class="col-sm-3 control-label">Ghi chú</label>
@@ -274,16 +231,31 @@ table#products-table thead tr td {
 <!-- DataTables -->
 <script src="{{ asset('plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+<!-- iCheck -->
+<script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
 @endsection
 
 @section('js_ext')
+
+	var colors 		= [];
+	var storages 	= [];
+	var qualities 	= [];
+	var isQuocTe	= true;
+
 	$.ajaxSetup({
 	    headers: {
 	        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 	    }
 	});
 
-	// Get vendor name of product
+	{{-- Setup iCheck --}}
+	$('input').iCheck({
+	    radioClass: 'iradio_flat-blue',
+	    checkboxClass: 'icheckbox_flat-blue',
+	});
+	{{-- End Setup iCheck --}}
+
+	{{-- Setup display modal add new product --}}
 	$('#btn_add_product').on('click', function(){
 		$.ajax({
 			url: '{{ route('categoryname') }}',
@@ -302,63 +274,82 @@ table#products-table thead tr td {
 			    }));
 			});
 		})
-		.fail(function() {
-			console.log("error");
+
+		$('input:radio[name="versions"][value="1"]').iCheck('check');
+
+		$('input').on('ifChecked', function(event){
+	  		if ( $(this).attr('name') == 'colors' ) {
+	  			if ( $.inArray( $(this).val(), colors) == -1 ) colors.push($(this).val());
+	  		}
+	  		else if ( $(this).attr('name') == 'storages' ) {
+	  			if ( $.inArray( $(this).val(), storages) == -1 ) storages.push($(this).val());
+	  		}
+	  		else if ( $(this).attr('name') == 'qualities') {
+	  			if ( $.inArray( $(this).val(), qualities) == -1 ) qualities.push($(this).val());
+	  		}
+	  		else if ( $(this).attr('name') == 'versions') {
+	  			if ( $(this).val() == '1' ) {
+	  				isQuocTe = true;
+	  			}
+	  			else {
+	  				isQuocTe = false;
+	  			}
+	  		}
+		});
+
+		$('input').on('ifUnchecked', function(event){
+	  		if ( $(this).attr('name') == 'colors' ) {
+	  			colors.splice( $.inArray($(this).val(), colors), 1 );
+	  		}
+	  		else if ( $(this).attr('name') == 'storages' ) {
+	  			storages.splice( $.inArray($(this).val(), storages), 1 );
+	  		}
+	  		else if ( $(this).attr('name') == 'qualities') {
+	  			qualities.splice( $.inArray($(this).val(), qualities), 1 );
+	  		}
 		});
 	});
+	{{-- End Setup display modal add new product --}}
 	
-	// Add new product
+	{{-- Add new product --}}
 	$('#btn_save_product').on('click', function(){
 		var vendor_id	 = $('#vendor').val();
 		var product_name = $('#product_name').val();
-		var colorProduct = $('#colorProduct').find(":selected").text();
-		var storageProduct = $('#storageProduct').find(":selected").text();
-		var qualityProduct = $('#qualityProduct').find(":selected").text();
 		var quantity_in_stock = $('#quantity_in_stock').val();
 		var product_info = $('#product_info').val();
+		var data = { 
+				vendor_id: vendor_id,
+				product_name: product_name,
+				colors: colors,
+				storages: storages,
+				qualities: qualities,
+				is_quocte: isQuocTe,
+				quantity_in_stock: quantity_in_stock,
+				product_info: product_info
+			};
+		
+		$.ajax({
+			url: '{{ route('products.store') }}',
+			type: 'POST',
+			data: data,
+		})
+		.done(function(data) {
+			$('#product_name').val('');
+			$('#quantity_in_stock').val(0);
+			$('#product_info').val('');
+			$('input').iCheck('uncheck');
+			colors = [];
+			storages = [];
+			qualities = [];
+			isQuocTe = true;
+			$('#create_product').modal('toggle');
+			$('#products-table').DataTable().ajax.reload();
 
-		{{-- if( $('#colorProduct').val() != 0 && $('#storageProduct').val() != 0 && $('#qualityProduct').val() != 0){
-			var data = { 
-					vendor_id: vendor_id,
-					product_name: product_name,
-					colorProduct: colorProduct,
-					storageProduct: storageProduct,
-					qualityProduct: qualityProduct,
-					quantity_in_stock: quantity_in_stock,
-					product_info: product_info
-				};
-
-			console.log(data);
-			
-			$.ajax({
-				url: '{{ route('products.store') }}',
-				type: 'POST',
-				data: data,
-			})
-			.done(function(data) {
-				$('#product_name').val('');
-				$('#colorProduct').val(0);
-				$('#storageProduct').val(0);
-				$('#qualityProduct').val(0);
-				$('#quantity_in_stock').val('');
-				$('#product_info').val('');
-				$('#create_product').modal('toggle');
-				$('#products-table').DataTable().ajax.reload();
-			}) --}}
-		{{-- }
-		else {
-			if( $('#colorProduct').val() == 0){
-				$('#colorProduct').focus();
-			}
-			else if( $('#storageProduct').val() == 0){
-				$('#storageProduct').focus();
-			}
-			else {
-				$('#qualityProduct').focus();
-			}
-		} --}}
+		})
 	});
+	{{-- End Add new product --}}
 
+	{{-- Setup Datatables --}}
 	$('#products-table').DataTable({
         processing: true,
         serverSide: true,
@@ -388,12 +379,17 @@ table#products-table thead tr td {
 		    }
 		}
     });
+    {{-- End Datatables --}}
 
     $('#products-table tbody').on('click', 'tr', function(e){
     	$('#info_product').modal('toggle');
 		$('#info_productName').val($(this).find("td:eq(1)").html());
-		$('#info_quantity_in_stock').val($(this).find("td:eq(3)").html());
-		$('#info_categoryNote').val($(this).find("td:eq(4)").html());
+		$('#info_colorProduct').text($(this).find("td:eq(2)").html());
+		$('#info_storageProduct').text($(this).find("td:eq(3)").html());
+		$('#info_qualityProduct').text($(this).find("td:eq(4)").html());
+		$('#info_versionProduct').text($(this).find("td:eq(5)").html());
+		$('#info_quantity_in_stock').val($(this).find("td:eq(7)").html());
+		$('#info_categoryNote').val($(this).find("td:eq(8)").html());
 
 		var vendor = $(this).find("td:eq(2)").html();
 		var id = $(this).find("td:eq(0)").html();
@@ -420,10 +416,7 @@ table#products-table thead tr td {
 		            $(this).attr("selected","selected");    
 		        }
 			});	
-		})
-		.fail(function() {
-			console.log("error");
-		});		
+		});
 		
 		$('#btn_delete').on('click', function(){		
 			var url = "{!! route('products.delete',['id'=>':id']) !!}";
@@ -439,10 +432,7 @@ table#products-table thead tr td {
 			.done(function(data) {
 				$('#info_product').modal('toggle');
 				$('#products-table').DataTable().ajax.reload();
-			})
-			.fail(function() {
-				console.log("error");
-			})
+			});
 		});
 		
 		$('#btn_update').on('click', function(){
@@ -468,15 +458,7 @@ table#products-table thead tr td {
 				$('#info_product').modal('toggle');
 				$('#products-table').DataTable().ajax.reload();
 			})
-			.fail(function() {
-				console.log("error");
-			})
 		});
-
-    });
-
-    $('#btn_add_color').on('click', function(){
-		alert(1);
     });
 
 @endsection

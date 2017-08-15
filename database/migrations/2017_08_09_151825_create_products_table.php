@@ -21,10 +21,11 @@ class CreateProductsTable extends Migration
             $table->string('color_product');
             $table->string('storage_product');
             $table->string('quality_product');
+            $table->boolean('is_quocte')->default(true);
             $table->string('product_info')->nullable();
             $table->smallInteger('vendor_id')->unsigned();
             $table->unsignedInteger('quantity_in_stock')->default(0);
-            $table->timestamps();
+            $table->date('created_at')->nullable();
 
             $table->foreign('vendor_id')->references('id')->on('categories');
         });
