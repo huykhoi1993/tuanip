@@ -38,10 +38,12 @@ class DepotController extends Controller
     public function store(Request $request)
     {
         $result = Validator( $request->all(), array(
-            'productId'        => 'required|integer',
+            'productName'       => 'required|max:255:string',
             'storageProduct'    => 'required|max:255:string',
             'qualityProduct'    => 'required|max:255:string',
             'colorProduct'      => 'required|max:255:string',
+            'is_quocte'         => 'required|integer',
+            'thanhToan'         => 'required|max:255:string',
             'quantityProduct'   => 'required|integer',
             'priceProduct'      => 'required|integer',
             'totalPrice'        => 'required|integer',
@@ -50,25 +52,29 @@ class DepotController extends Controller
 
         if ( ! $result->fails()) {
             $saler              = $request->input('saler');
-            $productId          = $request->input('productId');
+            $productName        = $request->input('productName');
             $storageProduct     = $request->input('storageProduct');
             $qualityProduct     = $request->input('qualityProduct');
             $colorProduct       = $request->input('colorProduct');
             $quantityProduct    = $request->input('quantityProduct');
+            $is_quocte          = $request->input('is_quocte');
+            $pay_type           = $request->input('thanhToan');
             $inputDate          = $request->input('inputDate');
             $priceProduct       = $request->input('priceProduct');
             $totalPrice         = $request->input('totalPrice');
             $depotNote          = $request->input('depotNote');
-            $isInput          = $request->input('isInput');
+            $isInput            = $request->input('isInput');
 
             if( DB::table('depots')
                 ->insert([
                     'saler'              => $saler,
-                    'product_id'         => $productId,
+                    'product_name'       => $productName,
                     'storage_product'    => $storageProduct,
                     'quality_product'    => $qualityProduct,
                     'color_product'      => $colorProduct,
                     'quantity_product'   => $quantityProduct,
+                    'is_quocte'          => $is_quocte,
+                    'pay_type'           => $pay_type,
                     'input_date'         => Carbon::createFromFormat('d/m/Y', $inputDate)->toDateString(),
                     'price_product'      => $priceProduct,
                     'total_price'        => $totalPrice,
@@ -78,18 +84,37 @@ class DepotController extends Controller
             {
                 $ob_quantityInStock = DB::table('products')
                                     ->select('quantity_in_stock')
+                                    ->where([
+                                        ['product_name', '=', $productName],
+                                        ['storage_product', '=', $storageProduct],
+                                        ['quality_product', '=', $qualityProduct],
+                                        ['color_product', '=', $colorProduct],
+                                        ['is_quocte', '=', $is_quocte],
+                                    ])
                                     ->first();
+                                    
+                // echo $productName;
+                // echo $storageProduct;
+                // echo $qualityProduct;
+                // echo $colorProduct;
+                // echo $is_quocte;
 
                 DB::table('products')
-                    ->where('id', $productId)
+                    ->where([
+                        ['product_name', '=', $productName],
+                        ['storage_product', '=', $storageProduct],
+                        ['quality_product', '=', $qualityProduct],
+                        ['color_product', '=', $colorProduct],
+                        ['is_quocte', '=', $is_quocte],
+                    ])
                     ->update([
                         'quantity_in_stock' => ($ob_quantityInStock->quantity_in_stock + $quantityProduct),
                         'updated_at'        => Carbon::now()
-                        ]);
+                    ]);
 
-                return response()->json([
-                    'message' => 'OK'
-                ]); 
+                // return response()->json([
+                //     'message' => 'OK'
+                // ]); 
             }
         }
         else {
@@ -152,11 +177,16 @@ class DepotController extends Controller
      */
     public function getDepots()
     {
-        $depots = DB::select("select id, saler, (select product_name from products t2 where t2.id = t1.product_id) as product_name, storage_product, color_product, quality_product, price_product, quantity_product, total_price, depot_note, input_date, is_input_depot from depots t1 where 1 ");
-
+        $depots = DB::table('depots')
+                    ->select('id', 'saler', 'product_name', 'storage_product', 'color_product', 'quantity_product', 'quality_product', 'is_quocte', 'price_product', 'total_price', 'pay_type', 'depot_note', 'input_date', 'is_input_depot')
+                    ->get();
+                    
         return Datatables::of($depots)
             ->editColumn('input_date', function ($depot) {
                 return $depot->input_date ? with(new Carbon($depot->input_date))->format('d/m/Y') : '';
+            })
+            ->editColumn('is_quocte', function ($depot) {
+                return $depot->is_quocte == 1 ? 'Quốc tế' : 'Lock';
             })
             ->editColumn('is_input_depot', function ($depot) {
                 return $depot->is_input_depot == 1 ? 'Nhập' : 'Xuất';

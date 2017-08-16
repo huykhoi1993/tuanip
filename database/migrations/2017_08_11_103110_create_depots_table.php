@@ -13,23 +13,21 @@ class CreateDepotsTable extends Migration
      */
     public function up()
     {
-        Schema::enableForeignKeyConstraints();
-
         Schema::create('depots', function (Blueprint $table) {
             $table->smallIncrements('id');
             $table->string('saler')->nullable();
-            $table->smallInteger('product_id')->unsigned();
+            $table->string('product_name');
             $table->string('storage_product');
             $table->string('quality_product');
             $table->string('color_product');
             $table->smallInteger('quantity_product')->unsigned();
+            $table->boolean('is_quocte')->default(true);
+            $table->string('pay_type');
             $table->date('input_date');
             $table->unsignedInteger('price_product');
             $table->unsignedBigInteger('total_price');
             $table->string('depot_note')->nullable();
-            $table->enum('is_input_depot', [0, 1])->default(1);    
-
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->boolean('is_input_depot')->default(true);    
         });
     }
 

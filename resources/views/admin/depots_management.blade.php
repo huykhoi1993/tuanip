@@ -16,17 +16,22 @@ table#depots-table thead tr td {
 	#div_qualityProduct,
 	#div_colorProduct,
 	#label_quantityProduct,
-	#div_quantityProduct {
+	#div_quantityProduct,
+	#div_versionProduct,
+	#label_thanhToan,
+	#div_thanhToan {
 		margin: 0;
 		padding-left: 0;
 	}
 
-	#label_quantityProduct {
+	#label_quantityProduct,
+	#label_thanhToan {
 		text-align: right;
 	}
 
 	#div_qualityProduct,
-	#div_quantityProduct {
+	#div_quantityProduct,
+	#div_thanhToan {
 		padding-right: 0;
 	}
 }	
@@ -51,16 +56,18 @@ table#depots-table thead tr td {
 				<thead>
 					<tr>
 						<td>Mã đơn</td>
-						<td>Người bán (mua)</td>
+						<td>Người bán(mua)</td>
 						<td>Sản phẩm</td>
 						<td>Bộ nhớ</td>
 						<td>Màu</td>
-						<td>Loại hàng</td>
+						<td>Slượng</td>
+						<td>Clượng</td>
+						<td>Loại</td>
 						<td>Giá</td>
-						<td>Số lượng</td>
-						<td>Thành tiền</td>
+						<td>Tổng tiền</td>
+						<td>Thanh toán</td>
 						<td>Ghi chú</td>
-						<td>Ngày tạo đơn</td>
+						<td>Ngày tạo</td>
 						<td>Đơn nhập</td>
 					</tr>
 				</thead>
@@ -118,11 +125,26 @@ table#depots-table thead tr td {
 					        		</div>
 			                  	</div>
 					        </div>
-{{-- 					        <div class="form-group">
-					            
-					            <div class="col-sm-9">
-					            </div>
-					        </div> --}}
+					        <div class="form-group">
+					        	<label for="versionProduct" class="col-sm-3 control-label">Phiên bản</label>
+					        	<div class="col-sm-9">
+					        		<div id="div_versionProduct" class="col-sm-4 form-group">
+							        	<select class="form-control" id="versionProduct">
+							        		<option value="0">Lock</option>
+							        		<option value="1" selected="true">Quốc tế</option>
+					                  	</select>
+				                  	</div>
+					        		<div id="label_thanhToan" class="col-sm-4 form-group">
+					        			<label class="control-label">Thanh toán</label>
+					        		</div>
+					        		<div id="div_thanhToan" class="col-sm-4 form-group">
+					                	<select class="form-control" id="thanhToan">
+							        		<option value="0">Tiền mặt</option>
+							        		<option value="1" selected="true">Chuyển khoản</option>
+					                  	</select>
+					        		</div>
+			                  	</div>
+					        </div>
 					        <div class="form-group">
 					            <label for="inputDate" class="col-sm-3 control-label">Ngày nhập</label>
 					            <div class="col-sm-9">
@@ -273,7 +295,7 @@ table#depots-table thead tr td {
 	
 	$('#btn_input_depot').on('click', function(){
 		getProductName();
-		
+
 		var productName = $("#productName option:first").text();
 		getStoragesProduct( productName);
 
@@ -282,7 +304,67 @@ table#depots-table thead tr td {
 				
 		var qualityProduct = $("#qualityProduct option:first").text();
 		getColorsProduct( productName, storageProduct, qualityProduct);
-
+	
+		$('#btn_save_input_depot').on('click', function(){
+			if ( $('#storageProduct').val() != 0 && $('#qualityProduct').val() != 0){
+				var saler = $('#saler').val();
+				var productName = $('#productName').find(":selected").text();
+				var storageProduct = $('#storageProduct').find(":selected").text();
+				var qualityProduct = $('#qualityProduct').find(":selected").text();
+				var colorProduct = $('#colorProduct').find(":selected").text();
+				var quantityProduct = $('#quantityProduct').val();
+				var versionProduct = $('#versionProduct').find(":selected").val();
+				var thanhToan = $('#thanhToan').find(":selected").text();
+				var inputDate = $('#inputDate').val();
+				var priceProduct = $('#priceProduct').val();
+				var totalPrice = $('#totalPrice').val();
+				var depotNote = $('#depotNote').val();
+				
+				var data = {
+					isInput: 1,
+					saler: saler,
+					productName: productName,
+					storageProduct: storageProduct,
+					qualityProduct: qualityProduct,
+					colorProduct: colorProduct,
+					quantityProduct: quantityProduct,
+					is_quocte: versionProduct,
+					thanhToan: thanhToan,
+					inputDate: inputDate,
+					priceProduct: priceProduct,
+					totalPrice: totalPrice,
+					depotNote: depotNote
+				};
+				
+				$.ajax({
+					url: '{{ route('depots.store') }}',
+					type: 'POST',
+					data: data,
+				})
+				.done(function(data) {
+					$('#input_depot').modal('toggle');
+					$('#saler').val('');
+					$('#productName').val(0);
+					$('#storageProduct').val(0);
+					$('#qualityProduct').val(0);
+					$('#colorProduct').val(0);
+					$('#quantityProduct').val(1);
+					$('#inputDate').val("{{ \Carbon\Carbon::now()->format('d/m/Y') }}");
+					$('#priceProduct').val('');
+					$('#totalPrice').val('');
+					$('#depotNote').val('');
+					$('#depots-table').DataTable().ajax.reload();
+				});
+			}
+			else {
+				if ( $('#storageProduct').val() == 0 ) {
+					$('#storageProduct').focus();
+				}
+				else {
+					$('#qualityProduct').focus();
+				}
+			}
+		});
 	});
 
 	$('#priceProduct, #totalPrice').inputmask("numeric", {
@@ -307,63 +389,6 @@ table#depots-table thead tr td {
 		var priceProduct = $('#priceProduct').val();
 
 		$('#totalPrice').val( quantityProduct * priceProduct);
-	});
-
-	$('#btn_save_input_depot').on('click', function(){
-		if ( $('#storageProduct').val() != 0 && $('#qualityProduct').val() != 0){
-			var saler = $('#saler').val();
-			var productId = $('#productName').val();
-			var storageProduct = $('#storageProduct').find(":selected").text();
-			var qualityProduct = $('#qualityProduct').find(":selected").text();
-			var colorProduct = $('#colorProduct').find(":selected").text();
-			var quantityProduct = $('#quantityProduct').val();
-			var inputDate = $('#inputDate').val();
-			var priceProduct = $('#priceProduct').val();
-			var totalPrice = $('#totalPrice').val();
-			var depotNote = $('#depotNote').val();
-			
-			var data = {
-				isInput: 1,
-				saler: saler,
-				productId: productId,
-				storageProduct: storageProduct,
-				qualityProduct: qualityProduct,
-				colorProduct: colorProduct,
-				quantityProduct: quantityProduct,
-				inputDate: inputDate,
-				priceProduct: priceProduct,
-				totalPrice: totalPrice,
-				depotNote: depotNote
-			};
-	
-			$.ajax({
-				url: '{{ route('depots.store') }}',
-				type: 'POST',
-				data: data,
-			})
-			.done(function(data) {
-				$('#input_depot').modal('toggle');
-				$('#saler').val('');
-				$('#productName').val(0);
-				$('#storageProduct').val(0);
-				$('#qualityProduct').val(0);
-				$('#colorProduct').val(0);
-				$('#quantityProduct').val(1);
-				$('#inputDate').val("{{ \Carbon\Carbon::now()->format('d/m/Y') }}");
-				$('#priceProduct').val('');
-				$('#totalPrice').val('');
-				$('#depotNote').val('');
-				$('#depots-table').DataTable().ajax.reload();
-			});
-		}
-		else {
-			if ( $('#storageProduct').val() == 0 ) {
-				$('#storageProduct').focus();
-			}
-			else {
-				$('#qualityProduct').focus();
-			}
-		}
 	});
 
 	$('#depots-table').DataTable({
@@ -394,6 +419,24 @@ table#depots-table thead tr td {
 		        "sortDescending": "{{ trans('datatables.aria.sortDescending') }}"
 		    }
 		}
+    });
+
+    $('#productName').on('input', function(){
+    	let productName = $("#productName option:selected").text();
+		getStoragesProduct( productName);
+    });
+
+    $('#storageProduct').on('input', function(){
+    	let productName = $("#productName option:selected").text();
+		let storageProduct = $("#storageProduct option:selected").text();
+		getQualitiesProduct( productName, storageProduct);
+    });
+
+    $('#qualityProduct').on('input', function(){
+    	let productName = $("#productName option:selected").text();
+		let storageProduct = $("#storageProduct option:selected").text();
+		let qualityProduct = $("#qualityProduct option:selected").text();
+		getColorsProduct( productName, storageProduct, qualityProduct);
     });
 
     function getProductName(){

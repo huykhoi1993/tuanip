@@ -26,6 +26,7 @@ class CreateProductsTable extends Migration
             $table->smallInteger('vendor_id')->unsigned();
             $table->unsignedInteger('quantity_in_stock')->default(0);
             $table->date('created_at')->nullable();
+            $table->date('updated_at')->nullable();
 
             $table->foreign('vendor_id')->references('id')->on('categories');
         });
