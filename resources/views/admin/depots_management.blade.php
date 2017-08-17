@@ -34,16 +34,16 @@ table#depots-table thead tr td {
 	#div_thanhToan {
 		padding-right: 0;
 	}
-}	
+}
 </style>
 @endsection
 
 @section('content')
 	<div class="form-group">
-		<button class="btn btn-primary btn-flat" id="btn_input_depot" data-toggle="modal" data-target="#input_depot">
+		<button class="btn btn-primary btn-flat" id="btn_imp_depot" data-toggle="modal" data-target="#input_depot">
 			<i class="fa fa-arrow-down"></i> Nhập hàng
 		</button>
-		<button class="btn btn-success btn-flat" id="btn_output_depot" data-toggle="modal" data-target="#output_depot">
+		<button class="btn btn-success btn-flat" id="btn_exp_depot" data-toggle="modal" data-target="#output_depot">
 			<i class="fa fa-arrow-up"></i> Xuất hàng
 		</button>
 	</div>
@@ -52,26 +52,28 @@ table#depots-table thead tr td {
 			<h3 class="box-title text-info">Danh sách các đơn hàng</h3>
 		</div>
 		<div class="box-body">
-			<table id="depots-table" class="table table-bordered table-striped dataTable">
-				<thead>
-					<tr>
-						<td>Mã đơn</td>
-						<td>Người bán(mua)</td>
-						<td>Sản phẩm</td>
-						<td>Bộ nhớ</td>
-						<td>Màu</td>
-						<td>Slượng</td>
-						<td>Clượng</td>
-						<td>Loại</td>
-						<td>Giá</td>
-						<td>Tổng tiền</td>
-						<td>Thanh toán</td>
-						<td>Ghi chú</td>
-						<td>Ngày tạo</td>
-						<td>Đơn nhập</td>
-					</tr>
-				</thead>
-			</table>
+			<div class="table-responsive">
+				<table id="depots-table" class="table table-bordered table-responsive table-striped dataTable">
+					<thead>
+						<tr>
+							<td>Mã đơn</td>
+							<td>Người bán(mua)</td>
+							<td>Sản phẩm</td>
+							<td>Bộ nhớ</td>
+							<td>Màu</td>
+							<td>Slượng</td>
+							<td>Clượng</td>
+							<td>Loại</td>
+							<td>Giá</td>
+							<td>Tổng tiền</td>
+							<td>Thanh toán</td>
+							<td>Ghi chú</td>
+							<td>Ngày tạo</td>
+							<td>Đơn nhập</td>
+						</tr>
+					</thead>
+				</table>
+			</div>
 		</div>
 	</div>
 
@@ -189,7 +191,7 @@ table#depots-table thead tr td {
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-rotate-left"></i> Hủy bỏ</button>
-					<button type="button" id="btn_save_input_depot" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
+					<button type="button" id="btn_save_imp_depot" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
 				</div>
 		    </div>
 	  	</div>
@@ -211,41 +213,98 @@ table#depots-table thead tr td {
 					    	<div class="form-group">
 					        	<label for="buyer" class="col-sm-3 control-label">Hàng xuất cho</label>
 					        	<div class="col-sm-9">
-						        	<input type="text" class="form-control" id="buyer" placeholder="Nhập người mua">
+						        	<input type="text" class="form-control" id="buyer" placeholder="Nhập người bán">
 			                  	</div>
 					        </div>
 					        <div class="form-group">
 					        	<label for="productName" class="col-sm-3 control-label">Sản phẩm</label>
 					        	<div class="col-sm-9">
 					        		<div id="div_productName" class="col-sm-4 form-group">
-							        	<select class="form-control" id="output_productName">
+							        	<select class="form-control" id="exp_productName" disabled="true">
 					                  	</select>
 				                  	</div>
 					        		<div id="div_storageProduct" class="col-sm-4 form-group">
-					        			<select class="form-control" id="output_storageProduct">
-					        				<option value="0">Bộ nhớ</option>
-					        				<option value="1">16 GB</option>
-					        				<option value="2">32 GB</option>
-					        				<option value="3">64 GB</option>
-					        				<option value="4">128 GB</option>
-					        				<option value="5">256 GB</option>
+					        			<select class="form-control" id="exp_storageProduct" disabled="true">
 					                  	</select>
 					        		</div>
 					        		<div id="div_qualityProduct" class="col-sm-4 form-group">
-					        			<select class="form-control" id="output_qualityProduct">
-					        				<option value="0">Chất lượng</option>
-					        				<option value="1">95 %</option>
-					        				<option value="2">99 %</option>
-					        				<option value="3">New</option>
+					        			<select class="form-control" id="exp_qualityProduct" disabled="true">
 					                  	</select>
 					        		</div>
 			                  	</div>
 					        </div>
-					        
 					        <div class="form-group">
-					            <label for="" class="col-sm-3 control-label">Ghi chú</label>
+					        	<label for="colorProduct" class="col-sm-3 control-label">Màu sắc</label>
+					        	<div class="col-sm-9">
+					        		<div id="div_colorProduct" class="col-sm-4 form-group">
+							        	<select class="form-control" id="exp_colorProduct" disabled="true">
+					                  	</select>
+				                  	</div>
+					        		<div id="label_quantityProduct" class="col-sm-4 form-group">
+					        			<label class="control-label">Số lượng</label>
+					        		</div>
+					        		<div id="div_quantityProduct" class="col-sm-4 form-group">
+					                	<input type="number" min="1" value="1" class="form-control" id="exp_quantityProduct">
+					        		</div>
+			                  	</div>
+					        </div>
+					        <div class="form-group">
+					        	<label for="versionProduct" class="col-sm-3 control-label">Phiên bản</label>
+					        	<div class="col-sm-9">
+					        		<div id="div_versionProduct" class="col-sm-4 form-group">
+							        	<select class="form-control" id="exp_versionProduct">
+							        		<option value="0">Lock</option>
+							        		<option value="1" selected="true">Quốc tế</option>
+					                  	</select>
+				                  	</div>
+					        		<div id="label_thanhToan" class="col-sm-4 form-group">
+					        			<label class="control-label">Thanh toán</label>
+					        		</div>
+					        		<div id="div_thanhToan" class="col-sm-4 form-group">
+					                	<select class="form-control" id="exp_thanhToan">
+							        		<option value="0">Tiền mặt</option>
+							        		<option value="1" selected="true">Chuyển khoản</option>
+					                  	</select>
+					        		</div>
+			                  	</div>
+					        </div>
+					        <div class="form-group">
+					            <label for="exp_date" class="col-sm-3 control-label">Ngày xuất</label>
 					            <div class="col-sm-9">
-					                <textarea rows="3" class="form-control" id="" placeholder="Nhập thông tin về đơn hàng"></textarea>
+					                <div class="input-group">
+					                  	<span class="input-group-addon">
+					                    	<i class="fa fa-calendar"></i>
+					                  	</span>
+					                  	<input class="form-control pull-right" value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}" id="exp_date" data-date-format="dd/mm/yyyy">
+					                </div>
+					            </div>
+					        </div>
+					        <div class="form-group">
+					            <label for="exp_priceProduct" class="col-sm-3 control-label">Giá thành</label>
+					            <div class="col-sm-9">
+					                <div class="input-group">
+						                <span class="input-group-addon">
+						                	<i class="fa fa-dollar"></i>
+						                </span>
+						                <input class="form-control" id="exp_priceProduct">
+					              	</div>
+					            </div>
+					        </div>
+					        <div class="form-group">
+					            <label for="exp_totalPrice" class="col-sm-3 control-label">Thành tiền</label>
+					            <div class="col-sm-9">
+					                <div class="input-group">
+						                <span class="input-group-addon">
+						                	<i class="fa fa-dollar"></i>
+						                </span>
+						                <input class="form-control bg-orange" id="exp_totalPrice" disabled>
+					              	</div>
+					            </div>
+					        </div>
+					        <div class="form-group">
+					            <label for="exp_depotNote" class="col-sm-3 control-label">Ghi chú</label>
+					            <div class="col-sm-9">
+					                <textarea rows="3" class="form-control" id="exp_depotNote" placeholder="Nhập thông tin về đơn hàng"></textarea>
 					            </div>
 					        </div>
 					    </div>
@@ -253,7 +312,7 @@ table#depots-table thead tr td {
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-rotate-left"></i> Hủy bỏ</button>
-					<button type="button" id="" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
+					<button type="button" id="btn_save_exp_depot" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
 				</div>
 		    </div>
 	  	</div>
@@ -293,7 +352,7 @@ table#depots-table thead tr td {
     });
 	{{-- End Date picker --}}
 	
-	$('#btn_input_depot').on('click', function(){
+	$('#btn_imp_depot').on('click', function(){
 		getProductName();
 
 		var productName = $("#productName option:first").text();
@@ -304,70 +363,130 @@ table#depots-table thead tr td {
 				
 		var qualityProduct = $("#qualityProduct option:first").text();
 		getColorsProduct( productName, storageProduct, qualityProduct);
-	
-		$('#btn_save_input_depot').on('click', function(){
-			if ( $('#storageProduct').val() != 0 && $('#qualityProduct').val() != 0){
-				var saler = $('#saler').val();
-				var productName = $('#productName').find(":selected").text();
-				var storageProduct = $('#storageProduct').find(":selected").text();
-				var qualityProduct = $('#qualityProduct').find(":selected").text();
-				var colorProduct = $('#colorProduct').find(":selected").text();
-				var quantityProduct = $('#quantityProduct').val();
-				var versionProduct = $('#versionProduct').find(":selected").val();
-				var thanhToan = $('#thanhToan').find(":selected").text();
-				var inputDate = $('#inputDate').val();
-				var priceProduct = $('#priceProduct').val();
-				var totalPrice = $('#totalPrice').val();
-				var depotNote = $('#depotNote').val();
+	});
+
+	$('#btn_exp_depot').on('click', function(){
+		getProductName();
+
+		var exp_productName = $("#exp_productName option:first").text();
+		getStoragesProduct( exp_productName);
+
+		var exp_storageProduct = $("#exp_storageProduct option:first").text();
+		getQualitiesProduct( exp_productName, exp_storageProduct);
 				
-				var data = {
-					isInput: 1,
-					saler: saler,
-					productName: productName,
-					storageProduct: storageProduct,
-					qualityProduct: qualityProduct,
-					colorProduct: colorProduct,
-					quantityProduct: quantityProduct,
-					is_quocte: versionProduct,
-					thanhToan: thanhToan,
-					inputDate: inputDate,
-					priceProduct: priceProduct,
-					totalPrice: totalPrice,
-					depotNote: depotNote
-				};
-				
-				$.ajax({
-					url: '{{ route('depots.store') }}',
-					type: 'POST',
-					data: data,
-				})
-				.done(function(data) {
-					$('#input_depot').modal('toggle');
-					$('#saler').val('');
-					$('#productName').val(0);
-					$('#storageProduct').val(0);
-					$('#qualityProduct').val(0);
-					$('#colorProduct').val(0);
-					$('#quantityProduct').val(1);
-					$('#inputDate').val("{{ \Carbon\Carbon::now()->format('d/m/Y') }}");
-					$('#priceProduct').val('');
-					$('#totalPrice').val('');
-					$('#depotNote').val('');
-					$('#depots-table').DataTable().ajax.reload();
-				});
-			}
-			else {
-				if ( $('#storageProduct').val() == 0 ) {
-					$('#storageProduct').focus();
-				}
-				else {
-					$('#qualityProduct').focus();
-				}
-			}
+		var exp_qualityProduct = $("#exp_qualityProduct option:first").text();
+		getColorsProduct( exp_productName, exp_storageProduct, exp_qualityProduct);
+	});
+
+	$('#btn_save_imp_depot').on('click', function(){
+		var saler 			= $('#saler').val();
+		var productName 	= $('#productName').find(":selected").text();
+		var storageProduct 	= $('#storageProduct').find(":selected").text();
+		var qualityProduct 	= $('#qualityProduct').find(":selected").text();
+		var colorProduct 	= $('#colorProduct').find(":selected").text();
+		var quantityProduct = $('#quantityProduct').val();
+		var versionProduct 	= $('#versionProduct').find(":selected").val();
+		var thanhToan 		= $('#thanhToan').find(":selected").text();
+		var exp_date 		= $('#exp_date').val();
+		var priceProduct 	= $('#priceProduct').val();
+		var totalPrice 		= $('#totalPrice').val();
+		var depotNote 		= $('#depotNote').val();
+		
+		var data = {
+			isInput: 1,
+			saler: saler,
+			productName: productName,
+			storageProduct: storageProduct,
+			qualityProduct: qualityProduct,
+			colorProduct: colorProduct,
+			quantityProduct: quantityProduct,
+			is_quocte: versionProduct,
+			thanhToan: thanhToan,
+			inputDate: exp_date,
+			priceProduct: priceProduct,
+			totalPrice: totalPrice,
+			depotNote: depotNote
+		};
+		
+		$.ajax({
+			url: '{{ route('depots.store') }}',
+			type: 'POST',
+			data: data,
+			async: false
+		})
+		.done(function(data) {
+			$('#input_depot').modal('toggle');
+			$('#saler').val('');
+			$('#productName').val(0);
+			$('#storageProduct').val(0);
+			$('#qualityProduct').val(0);
+			$('#colorProduct').val(0);
+			$('#quantityProduct').val(1);
+			$('#inputDate').val("{{ \Carbon\Carbon::now()->format('d/m/Y') }}");
+			$('#priceProduct').val('');
+			$('#totalPrice').val('');
+			$('#depotNote').val('');
+		})
+		.always(function(){
+			$('#depots-table').DataTable().ajax.reload();
 		});
 	});
 
-	$('#priceProduct, #totalPrice').inputmask("numeric", {
+	$('#btn_save_exp_depot').on('click', function(){
+		var buyer 				= $('#buyer').val();
+		var exp_productName 	= $('#exp_productName').find(":selected").text();
+		var exp_storageProduct 	= $('#exp_storageProduct').find(":selected").text();
+		var exp_qualityProduct 	= $('#exp_qualityProduct').find(":selected").text();
+		var exp_colorProduct 	= $('#exp_colorProduct').find(":selected").text();
+		var exp_quantityProduct = $('#exp_quantityProduct').val();
+		var exp_versionProduct 	= $('#exp_versionProduct').find(":selected").val();
+		var exp_thanhToan 		= $('#exp_thanhToan').find(":selected").text();
+		var exp_date 			= $('#exp_date').val();
+		var exp_priceProduct 	= $('#exp_priceProduct').val();
+		var exp_totalPrice 		= $('#exp_totalPrice').val();
+		var exp_depotNote 		= $('#exp_depotNote').val();
+		
+		var data = {
+			isInput: 0,
+			buyer: buyer,
+			productName: exp_productName,
+			storageProduct: exp_storageProduct,
+			qualityProduct: exp_qualityProduct,
+			colorProduct: exp_colorProduct,
+			quantityProduct: exp_quantityProduct,
+			isQuocte: exp_versionProduct,
+			thanhToan: exp_thanhToan,
+			inputDate: exp_date,
+			priceProduct: exp_priceProduct,
+			totalPrice: exp_totalPrice,
+			depotNote: exp_depotNote
+		};
+
+		$.ajax({
+			url: '{{ route('depots.store') }}',
+			type: 'POST',
+			data: data,
+			async: false
+		})
+		.done(function(data) {
+			$('#buyer').val('');
+			$('#exp_productName').val(0);
+			$('#exp_storageProduct').val(0);
+			$('#exp_qualityProduct').val(0);
+			$('#exp_colorProduct').val(0);
+			$('#exp_quantityProduct').val(1);
+			$('#exp_date').val("{{ \Carbon\Carbon::now()->format('d/m/Y') }}");
+			$('#exp_priceProduct').val('');
+			$('#exp_totalPrice').val('');
+			$('#exp_depotNote').val('');
+		})
+		.always(function(){
+			$('#output_depot').modal('toggle');
+			$('#depots-table').DataTable().ajax.reload();
+		});
+	});
+
+	$('#priceProduct, #totalPrice, #exp_priceProduct, #exp_totalPrice').inputmask("numeric", {
 		radixPoint: "",
 	    groupSeparator: ".",
 	    autoGroup: true,
@@ -376,6 +495,7 @@ table#depots-table thead tr td {
 	});
 
 	$('#totalPrice').val($('#quantityProduct').val()*$('#priceProduct').val());
+	$('#exp_totalPrice').val($('#exp_quantityProduct').val()*$('#exp_priceProduct').val());
 	
 	$('#quantityProduct').on('input', function(){
 		var quantityProduct = $('#quantityProduct').val();
@@ -384,11 +504,25 @@ table#depots-table thead tr td {
 		$('#totalPrice').val( quantityProduct * priceProduct);
 	});
 
+	$('#exp_quantityProduct').on('input', function(){
+		var exp_quantityProduct = $('#exp_quantityProduct').val();
+		var exp_priceProduct = $('#exp_priceProduct').val();
+
+		$('#exp_totalPrice').val( exp_quantityProduct * exp_priceProduct);
+	});
+
 	$('#priceProduct').on('input',function(){
 		var quantityProduct = $('#quantityProduct').val();
 		var priceProduct = $('#priceProduct').val();
 
 		$('#totalPrice').val( quantityProduct * priceProduct);
+	});
+
+	$('#exp_priceProduct').on('input',function(){
+		var exp_quantityProduct = $('#exp_quantityProduct').val();
+		var exp_priceProduct = $('#exp_priceProduct').val();
+
+		$('#exp_totalPrice').val( exp_quantityProduct * exp_priceProduct);
 	});
 
 	$('#depots-table').DataTable({
@@ -421,18 +555,18 @@ table#depots-table thead tr td {
 		}
     });
 
-    $('#productName').on('input', function(){
+    $('#productName').on('change', function(){
     	let productName = $("#productName option:selected").text();
 		getStoragesProduct( productName);
     });
 
-    $('#storageProduct').on('input', function(){
+    $('#storageProduct').on('change', function(){
     	let productName = $("#productName option:selected").text();
 		let storageProduct = $("#storageProduct option:selected").text();
 		getQualitiesProduct( productName, storageProduct);
     });
 
-    $('#qualityProduct').on('input', function(){
+    $('#qualityProduct').on('change', function(){
     	let productName = $("#productName option:selected").text();
 		let storageProduct = $("#storageProduct option:selected").text();
 		let qualityProduct = $("#qualityProduct option:selected").text();
@@ -457,6 +591,16 @@ table#depots-table thead tr td {
 			    }));
 			});
 			
+			$('#exp_productName')
+			    .find('option')
+			    .remove()
+			    .end();
+			$('#exp_productName').prop('disabled', false);
+			$.each( data, function( key, object ) {
+				$('#exp_productName').append($('<option>', { 
+			        text : object.product_name 
+			    }));
+			});
 		});
     }
 
@@ -481,6 +625,16 @@ table#depots-table thead tr td {
 			    }));
 			});
 			
+			$('#exp_storageProduct')
+			    .find('option')
+			    .remove()
+			    .end();
+			$('#exp_storageProduct').prop('disabled', false);
+			$.each( data, function( key, object ) {
+				$('#exp_storageProduct').append($('<option>', { 
+			        text : object.storage_product
+			    }));
+			});
 		});
     }
 
@@ -506,6 +660,16 @@ table#depots-table thead tr td {
 			    }));
 			});
 			
+			$('#exp_qualityProduct')
+			    .find('option')
+			    .remove()
+			    .end();
+			$('#exp_qualityProduct').prop('disabled', false);
+			$.each( data, function( key, object ) {
+				$('#exp_qualityProduct').append($('<option>', { 
+			        text : object.quality_product
+			    }));
+			});
 		});
     }
 
@@ -532,6 +696,16 @@ table#depots-table thead tr td {
 			    }));
 			});
 			
+			$('#exp_colorProduct')
+			    .find('option')
+			    .remove()
+			    .end();
+			$('#exp_colorProduct').prop('disabled', false);
+			$.each( data, function( key, object ) {
+				$('#exp_colorProduct').append($('<option>', { 
+			        text : object.color_product
+			    }));
+			});
 		});
     }
 @endsection

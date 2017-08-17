@@ -23,17 +23,19 @@ table#categories-table thead tr td {
 			<h3 class="box-title">Categories</h3>
 		</div>
 		<div class="box-body">
-			<table id="categories-table" class="table table-bordered table-hover">
-				<thead>
-					<tr>
-						<td>Mã</td>
-						<td>Tên danh mục</td>
-						<td>Danh mục cha</td>
-						<td>Ghi chú</td>
-						<td>Ngày tạo</td>
-					</tr>
-				</thead>
-			</table>
+			<div class="table-responsive">
+				<table id="categories-table" class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<td>Mã</td>
+							<td>Tên danh mục</td>
+							<td>Danh mục cha</td>
+							<td>Ghi chú</td>
+							<td>Ngày tạo</td>
+						</tr>
+					</thead>
+				</table>
+			</div>
 		</div>
 	</div>
 	
@@ -134,6 +136,9 @@ table#categories-table thead tr td {
 @endsection
 
 @section('js_ext')
+
+	var id;
+
 	$.ajaxSetup({
 	    headers: {
 	        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -172,6 +177,7 @@ table#categories-table thead tr td {
 		$.ajax({
 			url: '{{ route('categories.store') }}',
 			type: 'POST',
+			async: false,
 			data: { 
 				category_name: category_name,
 				category_note: category_note,
@@ -182,6 +188,8 @@ table#categories-table thead tr td {
 			$('#categoryName').val('');
 			$('#categoryNote').val('');
 			$('#create_category').modal('toggle');
+		})
+		.always(function(){
 			$('#categories-table').DataTable().ajax.reload();
 		});
     });
@@ -219,7 +227,7 @@ table#categories-table thead tr td {
 		$('#info_categoryNote').val($(this).find("td:eq(3)").html());
 
 		var cat = $(this).find("td:eq(2)").html();
-		var id = $(this).find("td:eq(0)").html();
+		id = $(this).find("td:eq(0)").html();
 
     	$.ajax({
 			url: '{{ route('categoryname') }}',
@@ -249,48 +257,54 @@ table#categories-table thead tr td {
 		            $(this).attr("selected","selected");    
 		        }
 			});	
-		});		
-		
-		$('#btn_delete').on('click', function(){		
-			var url = "{!! route('categories.delete',['id'=>':id']) !!}";
-	        url =  url.replace(':id', id);
-			
-			$.ajax({
-				url: url,
-				type: 'POST',
-				data: {
-					method: 'DELETE'
-				}
-			})
-			.done(function(data) {
-				$('#info_category').modal('toggle');
-				$('#categories-table').DataTable().ajax.reload();
-			});
-		});
-		
-		$('#btn_update').on('click', function(){
-			var url = "{!! route('categories.update',['id'=>':id']) !!}";
-	        url =  url.replace(':id', id);
-			
-			var parent_id = $('#info_category_parent').val();
-			var category_name = $('#info_categoryName').val();
-			var category_note = $('#info_categoryNote').val();
-
-			$.ajax({
-				url: url,
-				type: 'POST',
-				data: {
-					method: 'PUT',
-					parent_id: parent_id,
-					category_name: category_name,
-					category_note: category_note
-				}
-			})
-			.done(function(data) {
-				$('#info_category').modal('toggle');
-				$('#categories-table').DataTable().ajax.reload();
-			});
-		});
+		});				
     });
+
+	$('#btn_delete').on('click', function(){		
+		var url = "{!! route('categories.delete',['id'=>':id']) !!}";
+        url =  url.replace(':id', id);
+		
+		$.ajax({
+			url: url,
+			type: 'POST',
+			async: false,
+			data: {
+				method: 'DELETE'
+			}
+		})
+		.done(function(data) {
+			$('#info_category').modal('toggle');
+		})
+		.always(function(){
+			$('#categories-table').DataTable().ajax.reload();
+		});
+	});
+	
+	$('#btn_update').on('click', function(){
+		var url = "{!! route('categories.update',['id'=>':id']) !!}";
+        url =  url.replace(':id', id);
+		
+		var parent_id = $('#info_category_parent').val();
+		var category_name = $('#info_categoryName').val();
+		var category_note = $('#info_categoryNote').val();
+
+		$.ajax({
+			url: url,
+			type: 'POST',
+			async: false,
+			data: {
+				method: 'PUT',
+				parent_id: parent_id,
+				category_name: category_name,
+				category_note: category_note
+			}
+		})
+		.done(function(data) {
+			$('#info_category').modal('toggle');
+		})
+		.always(function(){
+			$('#categories-table').DataTable().ajax.reload();
+		});
+	});
 
 @endsection 

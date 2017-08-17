@@ -31,8 +31,18 @@
 
   <!-- Google Font -->
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
+  <style type="text/css">
+  .table-responsive {
+    padding: 10px;
+  }
+  @media screen and (max-width: 768px) {
+    .table-responsive {
+      overflow-x:scroll;
+    }
+  } 
+  </style>
 </head>
-<body class="hold-transition skin-blue sidebar-mini sidebar-collapse">
+<body class="hold-transition skin-blue sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
 

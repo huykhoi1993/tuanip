@@ -37,91 +37,172 @@ class DepotController extends Controller
      */
     public function store(Request $request)
     {
-        $result = Validator( $request->all(), array(
-            'productName'       => 'required|max:255:string',
-            'storageProduct'    => 'required|max:255:string',
-            'qualityProduct'    => 'required|max:255:string',
-            'colorProduct'      => 'required|max:255:string',
-            'is_quocte'         => 'required|integer',
-            'thanhToan'         => 'required|max:255:string',
-            'quantityProduct'   => 'required|integer',
-            'priceProduct'      => 'required|integer',
-            'totalPrice'        => 'required|integer',
-            'isInput'           => 'required|integer'
-        ));
+        if ( $request->input('isInput') == 1) {
+            $result = Validator( $request->all(), array(
+                'productName'       => 'required|max:255:string',
+                'storageProduct'    => 'required|max:255:string',
+                'qualityProduct'    => 'required|max:255:string',
+                'colorProduct'      => 'required|max:255:string',
+                'is_quocte'         => 'required|integer',
+                'thanhToan'         => 'required|max:255:string',
+                'quantityProduct'   => 'required|integer',
+                'priceProduct'      => 'required|integer',
+                'totalPrice'        => 'required|integer',
+            ));
 
-        if ( ! $result->fails()) {
-            $saler              = $request->input('saler');
-            $productName        = $request->input('productName');
-            $storageProduct     = $request->input('storageProduct');
-            $qualityProduct     = $request->input('qualityProduct');
-            $colorProduct       = $request->input('colorProduct');
-            $quantityProduct    = $request->input('quantityProduct');
-            $is_quocte          = $request->input('is_quocte');
-            $pay_type           = $request->input('thanhToan');
-            $inputDate          = $request->input('inputDate');
-            $priceProduct       = $request->input('priceProduct');
-            $totalPrice         = $request->input('totalPrice');
-            $depotNote          = $request->input('depotNote');
-            $isInput            = $request->input('isInput');
+            if ( ! $result->fails()) {
+                $saler              = $request->input('saler');
+                $productName        = $request->input('productName');
+                $storageProduct     = $request->input('storageProduct');
+                $qualityProduct     = $request->input('qualityProduct');
+                $colorProduct       = $request->input('colorProduct');
+                $quantityProduct    = $request->input('quantityProduct');
+                $is_quocte          = $request->input('is_quocte');
+                $pay_type           = $request->input('thanhToan');
+                $inputDate          = $request->input('inputDate');
+                $priceProduct       = $request->input('priceProduct');
+                $totalPrice         = $request->input('totalPrice');
+                $depotNote          = $request->input('depotNote');
+                $isInput            = $request->input('isInput');
 
-            if( DB::table('depots')
-                ->insert([
-                    'saler'              => $saler,
-                    'product_name'       => $productName,
-                    'storage_product'    => $storageProduct,
-                    'quality_product'    => $qualityProduct,
-                    'color_product'      => $colorProduct,
-                    'quantity_product'   => $quantityProduct,
-                    'is_quocte'          => $is_quocte,
-                    'pay_type'           => $pay_type,
-                    'input_date'         => Carbon::createFromFormat('d/m/Y', $inputDate)->toDateString(),
-                    'price_product'      => $priceProduct,
-                    'total_price'        => $totalPrice,
-                    'depot_note'         => $depotNote,
-                    'is_input_depot'     => $isInput
-                ]))
-            {
-                $ob_quantityInStock = DB::table('products')
-                                    ->select('quantity_in_stock')
-                                    ->where([
-                                        ['product_name', '=', $productName],
-                                        ['storage_product', '=', $storageProduct],
-                                        ['quality_product', '=', $qualityProduct],
-                                        ['color_product', '=', $colorProduct],
-                                        ['is_quocte', '=', $is_quocte],
-                                    ])
-                                    ->first();
-                                    
-                // echo $productName;
-                // echo $storageProduct;
-                // echo $qualityProduct;
-                // echo $colorProduct;
-                // echo $is_quocte;
+                if( DB::table('depots')
+                    ->insert([
+                        'saler'              => $saler,
+                        'product_name'       => $productName,
+                        'storage_product'    => $storageProduct,
+                        'quality_product'    => $qualityProduct,
+                        'color_product'      => $colorProduct,
+                        'quantity_product'   => $quantityProduct,
+                        'is_quocte'          => $is_quocte,
+                        'pay_type'           => $pay_type,
+                        'input_date'         => Carbon::createFromFormat('d/m/Y', $inputDate)->toDateString(),
+                        'price_product'      => $priceProduct,
+                        'total_price'        => $totalPrice,
+                        'depot_note'         => $depotNote,
+                        'is_input_depot'     => $isInput
+                    ]))
+                {
 
-                DB::table('products')
-                    ->where([
-                        ['product_name', '=', $productName],
-                        ['storage_product', '=', $storageProduct],
-                        ['quality_product', '=', $qualityProduct],
-                        ['color_product', '=', $colorProduct],
-                        ['is_quocte', '=', $is_quocte],
-                    ])
-                    ->update([
-                        'quantity_in_stock' => ($ob_quantityInStock->quantity_in_stock + $quantityProduct),
-                        'updated_at'        => Carbon::now()
-                    ]);
+                    $ob_quantityInStock = DB::table('products')
+                                        ->select('quantity_in_stock')
+                                        ->where([
+                                            ['product_name', '=', $productName],
+                                            ['storage_product', '=', $storageProduct],
+                                            ['quality_product', '=', $qualityProduct],
+                                            ['color_product', '=', $colorProduct],
+                                            ['is_quocte', '=', $is_quocte],
+                                        ])
+                                        ->first();
 
-                // return response()->json([
-                //     'message' => 'OK'
-                // ]); 
+                    dd($ob_quantityInStock);
+
+                    DB::table('products')
+                        ->where([
+                            ['product_name', '=', $productName],
+                            ['storage_product', '=', $storageProduct],
+                            ['quality_product', '=', $qualityProduct],
+                            ['color_product', '=', $colorProduct],
+                            ['is_quocte', '=', $is_quocte],
+                        ])
+                        ->update([
+                            'quantity_in_stock' => ($ob_quantityInStock->quantity_in_stock + $quantityProduct),
+                            'updated_at'        => Carbon::now()
+                        ]);
+
+                    return response()->json([
+                        'message' => 'OK'
+                    ]); 
+                }
+            }
+            else {
+                return response()->json([
+                    'message' => 'NG'
+                ]);
             }
         }
         else {
-            return response()->json([
-                'message' => 'NG'
-            ]);
+            $result = Validator( $request->all(), array(
+                'productName'       => 'required|max:255:string',
+                'storageProduct'    => 'required|max:255:string',
+                'qualityProduct'    => 'required|max:255:string',
+                'colorProduct'      => 'required|max:255:string',
+                'isQuocte'          => 'required|integer',
+                'thanhToan'         => 'required|max:255:string',
+                'quantityProduct'   => 'required|integer',
+                'priceProduct'      => 'required|integer',
+                'totalPrice'        => 'required|integer',
+            ));
+
+            if ( ! $result->fails()) {
+                echo "ok";
+                $buyer              = $request->input('buyer');
+                $productName        = $request->input('productName');
+                $storageProduct     = $request->input('storageProduct');
+                $qualityProduct     = $request->input('qualityProduct');
+                $colorProduct       = $request->input('colorProduct');
+                $quantityProduct    = $request->input('quantityProduct');
+                $isQuocte           = $request->input('isQuocte');
+                $pay_type           = $request->input('thanhToan');
+                $inputDate          = $request->input('inputDate');
+                $priceProduct       = $request->input('priceProduct');
+                $totalPrice         = $request->input('totalPrice');
+                $depotNote          = $request->input('depotNote');
+                $isInput            = $request->input('isInput');
+
+                if( DB::table('depots')
+                    ->insert([
+                        'saler'              => $buyer,
+                        'product_name'       => $productName,
+                        'storage_product'    => $storageProduct,
+                        'quality_product'    => $qualityProduct,
+                        'color_product'      => $colorProduct,
+                        'quantity_product'   => $quantityProduct,
+                        'is_quocte'          => $isQuocte,
+                        'pay_type'           => $pay_type,
+                        'input_date'         => Carbon::createFromFormat('d/m/Y', $inputDate)->toDateString(),
+                        'price_product'      => $priceProduct,
+                        'total_price'        => $totalPrice,
+                        'depot_note'         => $depotNote,
+                        'is_input_depot'     => $isInput
+                    ]))
+                {
+                    $ob_quantityInStock = DB::table('products')
+                                        ->select('quantity_in_stock')
+                                        ->where([
+                                            ['product_name', '=', $productName],
+                                            ['storage_product', '=', $storageProduct],
+                                            ['quality_product', '=', $qualityProduct],
+                                            ['color_product', '=', $colorProduct],
+                                            ['is_quocte', '=', $isQuocte],
+                                        ])
+                                        ->first();
+
+                    DB::table('products')
+                        ->where([
+                            ['product_name', '=', $productName],
+                            ['storage_product', '=', $storageProduct],
+                            ['quality_product', '=', $qualityProduct],
+                            ['color_product', '=', $colorProduct],
+                            ['is_quocte', '=', $isQuocte],
+                        ])
+                        ->update([
+                            'quantity_in_stock' => ($ob_quantityInStock->quantity_in_stock - $quantityProduct),
+                            'updated_at'        => Carbon::now()
+                        ]);
+
+                    return response()->json([
+                        'message' => 'OK'
+                    ]); 
+                }
+            }
+            else {
+                return response()->json([
+                    'message' => 'NG'
+                ]);
+            }
+
         }
+
     }
 
     /**

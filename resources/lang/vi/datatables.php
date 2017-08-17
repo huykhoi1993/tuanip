@@ -1,6 +1,6 @@
 <?php
 return [
-    "decimal" 	=>        "",
+    "decimal" =>        "",
     "emptyTable" =>     "Không có dữ liệu",
     "info" =>           "Đang hiển thị từ _START_ tới _END_ trong _TOTAL_ dữ liệu",
     "infoEmpty" =>      "Đang hiển thị 0 tới 0 của 0 dữ liệu",

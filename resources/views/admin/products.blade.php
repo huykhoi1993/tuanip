@@ -44,22 +44,24 @@ table#products-table thead tr td,
 			<h3 class="box-title">Sản phẩm</h3>
 		</div>
 		<div class="box-body">
-			<table id="products-table" class="table table-bordered table-hover">
-				<thead>
-					<tr>
-						<td>Mã SP</td>
-						<td>Sản phẩm</td>
-						<td>Màu</td>
-						<td>Bộ nhớ</td>
-						<td>Clượng</td>
-						<td>Loại</td>
-						<td>Nhà SX</td>
-						<td>Số máy</td>
-						<td>Ghi chú</td>
-						<td>Ngày tạo</td>
-					</tr>
-				</thead>
-			</table>
+			<div class="table-responsive">
+				<table id="products-table" class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<td>Mã SP</td>
+							<td>Sản phẩm</td>
+							<td>Màu</td>
+							<td>Bộ nhớ</td>
+							<td>Clượng</td>
+							<td>Loại</td>
+							<td>Nhà SX</td>
+							<td>Số máy</td>
+							<td>Ghi chú</td>
+							<td>Ngày tạo</td>
+						</tr>
+					</thead>
+				</table>
+			</div>
 		</div>
 	</div>
 
@@ -241,6 +243,7 @@ table#products-table thead tr td,
 	var storages 	= [];
 	var qualities 	= [];
 	var isQuocTe	= true;
+	var id;
 
 	$.ajaxSetup({
 	    headers: {
@@ -332,6 +335,7 @@ table#products-table thead tr td,
 			url: '{{ route('products.store') }}',
 			type: 'POST',
 			data: data,
+			async: false
 		})
 		.done(function(data) {
 			$('#product_name').val('');
@@ -343,9 +347,10 @@ table#products-table thead tr td,
 			qualities = [];
 			isQuocTe = true;
 			$('#create_product').modal('toggle');
-			$('#products-table').DataTable().ajax.reload();
-
 		})
+		.always(function(){
+			$('#products-table').DataTable().ajax.reload();
+	    })
 	});
 	{{-- End Add new product --}}
 
@@ -392,7 +397,7 @@ table#products-table thead tr td,
 		$('#info_categoryNote').val($(this).find("td:eq(8)").html());
 
 		var vendor = $(this).find("td:eq(2)").html();
-		var id = $(this).find("td:eq(0)").html();
+		id = $(this).find("td:eq(0)").html();
 
     	$.ajax({
 			url: '{{ route('categoryname') }}',
@@ -417,48 +422,54 @@ table#products-table thead tr td,
 		        }
 			});	
 		});
-		
-		$('#btn_delete').on('click', function(){		
-			var url = "{!! route('products.delete',['id'=>':id']) !!}";
-	        url =  url.replace(':id', id);
-
-			$.ajax({
-				url: url,
-				type: 'POST',
-				data: {
-					method: 'DELETE'
-				}
-			})
-			.done(function(data) {
-				$('#info_product').modal('toggle');
-				$('#products-table').DataTable().ajax.reload();
-			});
-		});
-		
-		$('#btn_update').on('click', function(){
-			var url = "{!! route('products.update',['id'=>':id']) !!}";
-	        url =  url.replace(':id', id);
-			var vendor_id = $('#info_vendorName').val();
-			var product_name = $('#info_productName').val();
-			var quantity_in_stock = $('#info_quantity_in_stock').val();
-			var product_info = $('#info_productNote').val();
-
-			$.ajax({
-				url: url,
-				type: 'POST',
-				data: {
-					method: 'PUT',
-					vendor_id: vendor_id,
-					product_name: product_name,
-					quantity_in_stock: quantity_in_stock,
-					product_info: product_info
-				}
-			})
-			.done(function(data) {
-				$('#info_product').modal('toggle');
-				$('#products-table').DataTable().ajax.reload();
-			})
-		});
     });
+
+    $('#btn_delete').on('click', function(){		
+		var url = "{!! route('products.delete',['id'=>':id']) !!}";
+        url =  url.replace(':id', id);
+
+		$.ajax({
+			url: url,
+			type: 'POST',
+			async: false,
+			data: {
+				method: 'DELETE'
+			}
+		})
+		.done(function(data) {
+			$('#info_product').modal('toggle');
+		})
+		.always(function(){
+			$('#products-table').DataTable().ajax.reload();
+	    });
+	});
+	
+	$('#btn_update').on('click', function(){
+		var url = "{!! route('products.update',['id'=>':id']) !!}";
+        url =  url.replace(':id', id);
+		var vendor_id = $('#info_vendorName').val();
+		var product_name = $('#info_productName').val();
+		var quantity_in_stock = $('#info_quantity_in_stock').val();
+		var product_info = $('#info_productNote').val();
+
+		$.ajax({
+			url: url,
+			type: 'POST',
+			async: false,
+			data: {
+				method: 'PUT',
+				vendor_id: vendor_id,
+				product_name: product_name,
+				quantity_in_stock: quantity_in_stock,
+				product_info: product_info
+			}
+		})
+		.done(function(data) {
+			$('#info_product').modal('toggle');
+		})
+		.always(function(){
+			$('#products-table').DataTable().ajax.reload();
+	    })
+	});
 
 @endsection
