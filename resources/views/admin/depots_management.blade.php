@@ -566,6 +566,8 @@ table#depots-table thead tr td {
 		getQualitiesProduct( productName, storageProduct);
 		let qualityProduct = $("#qualityProduct option:selected").text();
 		getColorsProduct( productName, storageProduct, qualityProduct);
+		let colorProduct = $("#colorProduct option:selected").text();
+		getVersionsProduct( productName, storageProduct, qualityProduct, colorProduct);
     });
 
     $('#storageProduct').on('change', function(){
@@ -574,6 +576,8 @@ table#depots-table thead tr td {
 		getQualitiesProduct( productName, storageProduct);
 		let qualityProduct = $("#qualityProduct option:selected").text();
 		getColorsProduct( productName, storageProduct, qualityProduct);
+		let colorProduct = $("#colorProduct option:selected").text();
+		getVersionsProduct( productName, storageProduct, qualityProduct, colorProduct);
     });
 
     $('#qualityProduct').on('change', function(){
@@ -581,15 +585,27 @@ table#depots-table thead tr td {
 		let storageProduct = $("#storageProduct option:selected").text();
 		let qualityProduct = $("#qualityProduct option:selected").text();
 		getColorsProduct( productName, storageProduct, qualityProduct);
+		let colorProduct = $("#colorProduct option:selected").text();
+		getVersionsProduct( productName, storageProduct, qualityProduct, colorProduct);
     });
 
-    $('#exp_productName').on('change', function(){
+    $('#colorProduct').on('change', function(){
+    	let productName = $("#productName option:selected").text();
+		let storageProduct = $("#storageProduct option:selected").text();
+		let qualityProduct = $("#qualityProduct option:selected").text();
+		let colorProduct = $("#colorProduct option:selected").text();
+		getVersionsProduct( productName, storageProduct, qualityProduct, colorProduct);
+    });
+
+	$('#exp_productName').on('change', function(){
 		let exp_productName = $("#exp_productName option:selected").text();
 		getStoragesProduct( exp_productName);
 		let exp_storageProduct = $("#exp_storageProduct option:selected").text();
 		getQualitiesProduct( exp_productName, exp_storageProduct);
 		let exp_qualityProduct = $("#exp_qualityProduct option:selected").text();
 		getColorsProduct( exp_productName, exp_storageProduct, exp_qualityProduct);
+		let exp_colorProduct = $("#exp_colorProduct option:selected").text();
+		getVersionsProduct( exp_productName, exp_storageProduct, exp_qualityProduct, exp_colorProduct);
 	});
 
 	$('#exp_storageProduct').on('change', function(){
@@ -598,6 +614,8 @@ table#depots-table thead tr td {
 		getQualitiesProduct( exp_productName, exp_storageProduct);
 		let exp_qualityProduct = $("#exp_qualityProduct option:selected").text();
 		getColorsProduct( exp_productName, exp_storageProduct, exp_qualityProduct);
+		let exp_colorProduct = $("#exp_colorProduct option:selected").text();
+		getVersionsProduct( exp_productName, exp_storageProduct, exp_qualityProduct, exp_colorProduct);
 	});
 
 	$('#exp_qualityProduct').on('change', function(){
@@ -605,7 +623,17 @@ table#depots-table thead tr td {
 		let exp_storageProduct = $("#exp_storageProduct option:selected").text();
 		let exp_qualityProduct = $("#exp_qualityProduct option:selected").text();
 		getColorsProduct( exp_productName, exp_storageProduct, exp_qualityProduct);
+		let exp_colorProduct = $("#exp_colorProduct option:selected").text();
+		getVersionsProduct( exp_productName, exp_storageProduct, exp_qualityProduct, exp_colorProduct);
 	});
+
+	$('#exp_colorProduct').on('change', function(){
+    	let exp_productName = $("#exp_productName option:selected").text();
+		let exp_storageProduct = $("#exp_storageProduct option:selected").text();
+		let exp_qualityProduct = $("#exp_qualityProduct option:selected").text();
+		let exp_colorProduct = $("#exp_colorProduct option:selected").text();
+		getVersionsProduct( exp_productName, exp_storageProduct, exp_qualityProduct, exp_colorProduct);
+    });
 
     function getProductName(){
 		$.ajax({
