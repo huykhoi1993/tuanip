@@ -93,9 +93,7 @@ class DepotController extends Controller
                                             ['is_quocte', '=', $is_quocte],
                                         ])
                                         ->first();
-
-                    dd($ob_quantityInStock);
-
+                                        
                     DB::table('products')
                         ->where([
                             ['product_name', '=', $productName],

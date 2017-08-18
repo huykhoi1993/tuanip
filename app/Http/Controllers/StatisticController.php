@@ -66,9 +66,70 @@ class StatisticController extends Controller
 			->groupBy('product_name')
 			->get();
 
+		//Lấy tiền hàng đã nhập chi tiết từng loại
+		$money_import_every_product = DB::table('depots')
+			->select(
+				'product_name',
+				'storage_product',
+				'quality_product',
+				'color_product',
+				'is_quocte',
+				'total_price'
+			)
+			->where([
+				['is_input_depot', '=', 1]
+			])
+			->get();
 
 		return response()->json([
-			'money_import' => $money_import_every_type
+			'money_import' 					=> $money_import,
+			'money_import_every_type' 		=> $money_import_every_type,
+			'money_import_every_product' 	=> $money_import_every_product
+		]);
+    }
+
+    public function getTotalMoneyExport(){
+	  	// Lấy tổng tiền hàng đã xuất
+    	$money_export = DB::table('depots')
+    		->select(
+    			DB::raw('sum(total_price) as total_money_export')
+			)
+			->where([
+				['is_input_depot', '=', 0]
+			])
+			->get();
+
+		// Lấy tiền hàng đã xuất với từng nhóm
+		$money_export_every_type = DB::table('depots')
+			->select(
+				'product_name',
+				DB::raw('sum(total_price) as total_money_export')
+			)
+			->where([
+				['is_input_depot', '=', 0]
+			])
+			->groupBy('product_name')
+			->get();
+
+		//Lấy tiền hàng đã nhập chi tiết từng loại
+		$money_export_every_product = DB::table('depots')
+			->select(
+				'product_name',
+				'storage_product',
+				'quality_product',
+				'color_product',
+				'is_quocte',
+				'total_price'
+			)
+			->where([
+				['is_input_depot', '=', 0]
+			])
+			->get();
+
+		return response()->json([
+			'money_export' 					=> $money_export,
+			'money_export_every_type' 		=> $money_export_every_type,
+			'money_export_every_product' 	=> $money_export_every_product
 		]);
     }
 }

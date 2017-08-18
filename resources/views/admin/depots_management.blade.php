@@ -131,9 +131,7 @@ table#depots-table thead tr td {
 					        	<label for="versionProduct" class="col-sm-3 control-label">Phiên bản</label>
 					        	<div class="col-sm-9">
 					        		<div id="div_versionProduct" class="col-sm-4 form-group">
-							        	<select class="form-control" id="versionProduct">
-							        		<option value="0">Lock</option>
-							        		<option value="1" selected="true">Quốc tế</option>
+							        	<select class="form-control" id="versionProduct" disabled="true">
 					                  	</select>
 				                  	</div>
 					        		<div id="label_thanhToan" class="col-sm-4 form-group">
@@ -363,6 +361,9 @@ table#depots-table thead tr td {
 				
 		var qualityProduct = $("#qualityProduct option:first").text();
 		getColorsProduct( productName, storageProduct, qualityProduct);
+
+		var colorProduct = $("#colorProduct option:first").text();
+		getVersionsProduct( productName, storageProduct, qualityProduct, colorProduct);
 	});
 
 	$('#btn_exp_depot').on('click', function(){
@@ -375,7 +376,10 @@ table#depots-table thead tr td {
 		getQualitiesProduct( exp_productName, exp_storageProduct);
 				
 		var exp_qualityProduct = $("#exp_qualityProduct option:first").text();
-		getColorsProduct( exp_productName, exp_storageProduct, exp_qualityProduct);
+		getColorsProduct( exp_productName, exp_storageProduct, exp_qualityProduct);		
+
+		var exp_colorProduct = $("#exp_colorProduct option:first").text();
+		getVersionsProduct( exp_productName, exp_storageProduct, exp_qualityProduct, exp_colorProduct);
 	});
 
 	$('#btn_save_imp_depot').on('click', function(){
@@ -558,12 +562,18 @@ table#depots-table thead tr td {
     $('#productName').on('change', function(){
     	let productName = $("#productName option:selected").text();
 		getStoragesProduct( productName);
+		let storageProduct = $("#storageProduct option:selected").text();
+		getQualitiesProduct( productName, storageProduct);
+		let qualityProduct = $("#qualityProduct option:selected").text();
+		getColorsProduct( productName, storageProduct, qualityProduct);
     });
 
     $('#storageProduct').on('change', function(){
     	let productName = $("#productName option:selected").text();
 		let storageProduct = $("#storageProduct option:selected").text();
 		getQualitiesProduct( productName, storageProduct);
+		let qualityProduct = $("#qualityProduct option:selected").text();
+		getColorsProduct( productName, storageProduct, qualityProduct);
     });
 
     $('#qualityProduct').on('change', function(){
@@ -572,6 +582,30 @@ table#depots-table thead tr td {
 		let qualityProduct = $("#qualityProduct option:selected").text();
 		getColorsProduct( productName, storageProduct, qualityProduct);
     });
+
+    $('#exp_productName').on('change', function(){
+		let exp_productName = $("#exp_productName option:selected").text();
+		getStoragesProduct( exp_productName);
+		let exp_storageProduct = $("#exp_storageProduct option:selected").text();
+		getQualitiesProduct( exp_productName, exp_storageProduct);
+		let exp_qualityProduct = $("#exp_qualityProduct option:selected").text();
+		getColorsProduct( exp_productName, exp_storageProduct, exp_qualityProduct);
+	});
+
+	$('#exp_storageProduct').on('change', function(){
+		let exp_productName = $("#exp_productName option:selected").text();
+		let exp_storageProduct = $("#exp_storageProduct option:selected").text();
+		getQualitiesProduct( exp_productName, exp_storageProduct);
+		let exp_qualityProduct = $("#exp_qualityProduct option:selected").text();
+		getColorsProduct( exp_productName, exp_storageProduct, exp_qualityProduct);
+	});
+
+	$('#exp_qualityProduct').on('change', function(){
+		let exp_productName = $("#exp_productName option:selected").text();
+		let exp_storageProduct = $("#exp_storageProduct option:selected").text();
+		let exp_qualityProduct = $("#exp_qualityProduct option:selected").text();
+		getColorsProduct( exp_productName, exp_storageProduct, exp_qualityProduct);
+	});
 
     function getProductName(){
 		$.ajax({
@@ -704,6 +738,45 @@ table#depots-table thead tr td {
 			$.each( data, function( key, object ) {
 				$('#exp_colorProduct').append($('<option>', { 
 			        text : object.color_product
+			    }));
+			});
+		});
+    }
+
+    function getVersionsProduct( product_name, storage_product, quality_product, color_product){
+    	$.ajax({
+			url: '{{ route('versionsproduct') }}',
+			type: 'GET',
+			async: false,
+			data: {
+				product_name: product_name,
+				storage_product: storage_product,
+				quality_product: quality_product,
+				color_product: color_product
+			}
+		})
+		.done(function(data) {
+			$('#versionProduct')
+			    .find('option')
+			    .remove()
+			    .end();
+			$('#versionProduct').prop('disabled', false);
+			$.each( data, function( key, object ) {
+				$('#versionProduct').append($('<option>', {
+			        value : object.is_quocte,
+			        text : object.is_quocte == 1 ? '{{ Config::get('array.VERSIONS.1')}}' : '{{ Config::get('array.VERSIONS.0')}}'
+			    }));
+			});
+			
+			$('#exp_versionProduct')
+			    .find('option')
+			    .remove()
+			    .end();
+			$('#exp_versionProduct').prop('disabled', false);
+			$.each( data, function( key, object ) {
+				$('#exp_versionProduct').append($('<option>', { 
+			        value : object.is_quocte,
+			        text : object.is_quocte == 1 ? '{{ Config::get('array.VERSIONS.1')}}' : '{{ Config::get('array.VERSIONS.0')}}'
 			    }));
 			});
 		});

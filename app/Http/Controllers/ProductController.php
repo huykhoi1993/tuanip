@@ -186,6 +186,7 @@ class ProductController extends Controller
                     ->select('product_name')
                     ->groupBy('product_name')
                     ->get();
+
         return response()->json($results);
     }
 
@@ -197,6 +198,7 @@ class ProductController extends Controller
                     ->where('product_name', '=', $productName)
                     ->groupBy('storage_product')
                     ->get();
+
         return response()->json($results);
     }
 
@@ -229,6 +231,29 @@ class ProductController extends Controller
                     ])
                     ->groupBy('color_product')
                     ->get();
+
         return response()->json($results);
     }
+
+    public function getVersionsProduct(Request $request)
+    {
+        $productName    = $request->input('product_name');
+        $storageProduct = $request->input('storage_product');
+        $qualityProduct = $request->input('quality_product');
+        $colorProduct   = $request->input('color_product');
+
+        $results = DB::table('products')
+                    ->select('is_quocte')
+                    ->where([
+                        ['product_name', '=', $productName],
+                        ['storage_product', '=', $storageProduct],
+                        ['quality_product', '=', $qualityProduct],
+                        ['color_product', '=', $colorProduct],
+                    ])
+                    ->get();
+
+        return response()->json($results);
+    }
+
+
 }

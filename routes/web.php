@@ -55,6 +55,7 @@
             Route::get('/storagesproduct', 'ProductController@getStoragesProduct')->name('storagesproduct');
             Route::get('/qualitiesproduct', 'ProductController@getQualitiesProduct')->name('qualitiesproduct');
             Route::get('/colorsproduct', 'ProductController@getColorsProduct')->name('colorsproduct');
+            Route::get('/versionsproduct', 'ProductController@getVersionsProduct')->name('versionsproduct');
             Route::post('/{id}/delete', 'ProductController@deleteProduct')->name('products.delete');
             Route::post('/{id}', 'ProductController@updateProduct')->name('products.update');
         });
@@ -81,6 +82,7 @@
         Route::group(['prefix' => 'statistic'], function(){
             Route::get('/getallproducts', 'StatisticController@getAllProducts')->name('statistic.getallproducts');
             Route::get('/gettotalmoneyimport', 'StatisticController@getTotalMoneyImport')->name('statistic.gettotalmoneyimport');
+            Route::get('/gettotalmoneyexport', 'StatisticController@getTotalMoneyExport')->name('statistic.gettotalmoneyexport');
             
         });
     });
