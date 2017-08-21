@@ -38,7 +38,6 @@ table#products-table thead tr td,
 	<div class="form-group">
 		<button class="btn btn-primary btn-flat" id="btn_add_product" data-toggle="modal" data-target="#create_product"><i class="fa fa-plus"></i> Thêm mới</button>
 	</div>
-	
 	<div class="box">
 		<div class="box-header">
 			<h3 class="box-title">Sản phẩm</h3>
@@ -235,6 +234,8 @@ table#products-table thead tr td,
 <script src="{{ asset('plugins/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
 <!-- iCheck -->
 <script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
+<!-- Chart.js -->
+<script src="{{ asset('plugins/chart.js/Chart.min.js') }}"></script>
 @endsection
 
 @section('js_ext')

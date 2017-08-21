@@ -7,7 +7,9 @@ use DB;
 
 class StatisticController extends Controller
 {
-    public function getAllProducts(){
+    
+    public function getAllProducts()
+    {
     	// Lấy tổng các sản phẩm có trong kho
     	$total_all_products = DB::table('products')
     		->select(
@@ -43,7 +45,8 @@ class StatisticController extends Controller
 		]);
     }
 
-    public function getTotalMoneyImport(){
+    public function getTotalMoneyImport()
+    {
     	// Lấy tổng tiền hàng đã nhập
     	$money_import = DB::table('depots')
     		->select(
@@ -88,7 +91,8 @@ class StatisticController extends Controller
 		]);
     }
 
-    public function getTotalMoneyExport(){
+    public function getTotalMoneyExport(Request $request)
+    {
 	  	// Lấy tổng tiền hàng đã xuất
     	$money_export = DB::table('depots')
     		->select(
