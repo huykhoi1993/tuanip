@@ -60,11 +60,12 @@
             Route::post('/{id}', 'ProductController@updateProduct')->name('products.update');
         });
 
-        Route::group(['prefix' => 'user'], function(){
-            Route::get('/', 'UserController@index')->name('users.index');
-            Route::post('/', 'UserController@store')->name('users.store');
-            Route::post('/{id}/delete', 'UserController@deleteUser')->name('users.delete');
-            Route::post('/{id}', 'UserController@updateUser')->name('users.update');
+        Route::group(['prefix' => 'member'], function(){
+            Route::get('/', 'MemberController@index')->name('members.index');
+            Route::post('/', 'MemberController@store')->name('members.store');
+            Route::post('/members', 'MemberController@getMembers')->name('members');
+            Route::post('/delete', 'MemberController@deleteMember')->name('members.delete');
+            Route::post('/update', 'MemberController@updateMember')->name('members.update');
         });
 
         Route::group(['prefix' => 'depot'], function(){
@@ -83,7 +84,10 @@
             Route::get('/getallproducts', 'StatisticController@getAllProducts')->name('statistic.getallproducts');
             Route::get('/gettotalmoneyimport', 'StatisticController@getTotalMoneyImport')->name('statistic.gettotalmoneyimport');
             Route::get('/gettotalmoneyexport', 'StatisticController@getTotalMoneyExport')->name('statistic.gettotalmoneyexport');
-            
+        });
+
+        Route::group(['prefix' => 'debit'], function(){
+            Route::get('/', 'DebitController@index')->name('debits.index');
         });
     });
 

@@ -252,7 +252,7 @@ table#depots-table thead tr td {
 					    	<div class="form-group">
 					        	<label for="buyer" class="col-sm-3 control-label">Hàng xuất cho</label>
 					        	<div class="col-sm-9">
-						        	<input type="text" class="form-control" id="buyer" placeholder="Nhập người bán">
+						        	<input type="text" class="form-control" id="buyer" placeholder="Nhập người mua">
 			                  	</div>
 					        </div>
 					        <div class="form-group">

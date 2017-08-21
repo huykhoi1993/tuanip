@@ -48,13 +48,14 @@
             <!-- Users management -->
             <li class="treeview">
                 <a href="#">
-                    <i class="fa fa-users"></i> <span>Quản lý khách hàng</span>
+                    <i class="fa fa-user"></i> <span>Khách hàng - Công Nợ</span>
                     <span class="pull-right-container">
                     <i class="fa fa-angle-left pull-right"></i>
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{ route('users.index') }}"><i class="fa fa-user"></i> Danh sách</a></li>
+                    <li><a href="{{ route('members.index') }}"><i class="fa fa-users"></i> Danh sách khách hàng</a></li>
+                    <li><a href=""><i class="fa fa-bank"></i> Thống kê Công - Nợ</a></li>
                 </ul>
             </li>
             <!-- End Users management -->
