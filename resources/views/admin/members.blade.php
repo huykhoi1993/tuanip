@@ -14,6 +14,13 @@ table#members-table thead tr td,
 	text-align: center;
 }
 
+table#members-table tbody tr td:nth-child(6) {
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	max-width: 150px;
+}
+
 div.radio div.col-sm-4,
 div.radio label {
 	padding-left: 0;
@@ -35,19 +42,21 @@ div.radio label {
 			<h3 class="box-title">Danh sách khách hàng</h3>
 		</div>
 		<div class="box-body">
-			<table id="members-table" class="table table-bordered table-hover">
-				<thead>
-					<tr>
-						<td>STT</td>
-						<td>Tên</td>
-						<td>SĐT</td>
-						<td>Giới tính</td>
-						<td>Địa chỉ</td>
-						<td>Ghi chú</td>
-						<td>Công - Nợ</td>
-					</tr>
-				</thead>
-			</table>
+			<div class="table-responsive">
+				<table id="members-table" class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<td>STT</td>
+							<td>Tên</td>
+							<td>SĐT</td>
+							<td>Giới tính</td>
+							<td>Địa chỉ</td>
+							<td>Ghi chú</td>
+							<td>Công - Nợ</td>
+						</tr>
+					</thead>
+				</table>
+			</div>
 		</div>
 	</div>
 

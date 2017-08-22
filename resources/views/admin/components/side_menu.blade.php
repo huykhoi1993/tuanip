@@ -55,7 +55,7 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="{{ route('members.index') }}"><i class="fa fa-users"></i> Danh sách khách hàng</a></li>
-                    <li><a href=""><i class="fa fa-bank"></i> Thống kê Công - Nợ</a></li>
+                    <li><a href="{{ route('debits.index') }}"><i class="fa fa-bank"></i> Thống kê Công - Nợ</a></li>
                 </ul>
             </li>
             <!-- End Users management -->

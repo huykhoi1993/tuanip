@@ -137,4 +137,15 @@ class MemberController extends Controller
             })
             ->make();
 	}
+
+    public function getMembersName(Request $request)
+    {
+        $search = $request->q;
+        $members = DB::table('members')
+                    ->select('id', 'member_name', 'member_phone')
+                    ->where('member_name','LIKE',"%$search%")
+                    ->get();
+
+        return response()->json($members);
+    }
 }

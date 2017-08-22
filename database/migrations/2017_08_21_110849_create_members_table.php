@@ -19,8 +19,9 @@ class CreateMembersTable extends Migration
             $table->string('member_phone');
             $table->boolean('is_female')->default(true);
             $table->string('member_address');
-            $table->string('member_note')->nullable();
-            $table->unsignedBigInteger('debt')->default(0);
+            $table->text('member_note')->nullable();
+            $table->BigInteger('debt')->default(0);
+            $table->timestamps();
         });
     }
 

@@ -94,7 +94,7 @@ table#depots-table thead tr td {
 		</div>
 		<div class="box-body">
 			<div class="table-responsive">
-				<table id="depots-table" class="table table-bordered table-responsive table-striped dataTable">
+				<table id="depots-table" class="table table-bordered table-striped dataTable">
 					<thead>
 						<tr>
 							<td>Mã đơn</td>

@@ -17,7 +17,7 @@ class CreateCatogoriesTable extends Migration
             $table->smallIncrements('id');
             $table->smallInteger('parent_id')->nullable();
             $table->string('category_name')->unique();
-            $table->string('category_note')->nullable();
+            $table->text('category_note')->nullable();
             $table->timestamps();
         });
     }

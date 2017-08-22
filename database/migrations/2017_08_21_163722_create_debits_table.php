@@ -18,8 +18,8 @@ class CreateDebitsTable extends Migration
             $table->Increments('id');
             $table->smallInteger('member_id')->unsigned();;
             $table->integer('total_amount');
-            $table->boolean('is_cong')->default(true);
-            $table->boolean('debit_done')->default(false);
+            $table->boolean('is_dedit')->default(true); //là nợ
+            $table->boolean('pay_done')->default(false);
             $table->string('debit_note')->nullable();
             $table->timestamps();
             $table->foreign('member_id')->references('id')->on('members');

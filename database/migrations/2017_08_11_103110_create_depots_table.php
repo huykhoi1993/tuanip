@@ -26,7 +26,7 @@ class CreateDepotsTable extends Migration
             $table->date('input_date');
             $table->unsignedInteger('price_product');
             $table->unsignedBigInteger('total_price');
-            $table->string('depot_note')->nullable();
+            $table->text('depot_note')->nullable();
             $table->boolean('is_input_depot')->default(true);    
         });
     }

@@ -64,6 +64,7 @@
             Route::get('/', 'MemberController@index')->name('members.index');
             Route::post('/', 'MemberController@store')->name('members.store');
             Route::post('/members', 'MemberController@getMembers')->name('members');
+            Route::get('/membersname', 'MemberController@getMembersName')->name('membersname');
             Route::post('/delete', 'MemberController@deleteMember')->name('members.delete');
             Route::post('/update', 'MemberController@updateMember')->name('members.update');
         });
@@ -88,6 +89,8 @@
 
         Route::group(['prefix' => 'debit'], function(){
             Route::get('/', 'DebitController@index')->name('debits.index');
+            Route::post('/', 'DebitController@store')->name('debits.store');
+            Route::post('/debits', 'DebitController@getDebits')->name('debits');
         });
     });
 

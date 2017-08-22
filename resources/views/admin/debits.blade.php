@@ -2,16 +2,26 @@
 
 @section('lib_css_ext')
 <link rel="stylesheet" href="{{ asset('plugins/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
+<!-- bootstrap datepicker -->
+<link rel="stylesheet" href="{{ asset('plugins/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css') }}">
 <!-- iCheck -->
 <link rel="stylesheet" href="{{ asset('plugins/iCheck/all.css') }}">
+<!-- Select2 -->
+<link rel="stylesheet" href="{{ asset('plugins/select2/dist/css/select2.min.css') }}">
 <style type="text/css">
-table#members-table thead tr td,
+thead tr td,
 .text-bold {
 	font-weight: bold;
 }
 
 .text-bold {
 	text-align: center;
+}
+
+tbody tr td:nth-child(3),
+tbody tr td:nth-child(4),
+tbody tr td:nth-child(5) {
+	text-align: right;
 }
 
 div.radio div.col-sm-4,
@@ -22,43 +32,45 @@ div.radio label {
 @endsection
 
 @section('title_header')
-	<h1 class="text-info">Quản lý khách hàng</h1>
+	<h1 class="text-info">Quản lý Công - Nợ</h1>
 @endsection
 
 @section('content')
 	<div class="form-group">
-		<button class="btn btn-primary btn-flat" id="btn_add_product" data-toggle="modal" data-target="#create_guest"><i class="fa fa-user-plus"></i> Thêm mới</button>
+		<button class="btn btn-primary btn-flat" id="btn_add_debit" data-toggle="modal" data-target="#create_debit"><i class="fa fa-calendar-plus-o"></i> Thêm mới</button>
 	</div>
-	
+
 	<div class="box">
 		<div class="box-header">
-			<h3 class="box-title">Danh sách khách hàng</h3>
+			<h3 class="box-title">Danh sách các công nợ</h3>
 		</div>
 		<div class="box-body">
-			<table id="members-table" class="table table-bordered table-hover">
-				<thead>
-					<tr>
-						<td>STT</td>
-						<td>Tên</td>
-						<td>SĐT</td>
-						<td>Giới tính</td>
-						<td>Địa chỉ</td>
-						<td>Ghi chú</td>
-						<td>Công - Nợ</td>
-					</tr>
-				</thead>
-			</table>
+			<div class="table-responsive">
+				<table id="debits-table" class="table table-bordered table-hover">
+					<thead>
+						<tr>
+							<td>STT</td>
+							<td>Khách hàng (SĐT)</td>
+							<td>Số tiền</td>
+							<td>Công (Nợ)</td>
+							<td>Thanh toán</td>
+							<td>Ghi chú</td>
+							<td>Ngày giao dịch</td>
+						</tr>
+					</thead>
+				</table>
+			</div>
 		</div>
 	</div>
 
 	<!-- Modal Create-->
-	<div id="create_guest" class="modal fade" role="dialog">
+	<div id="create_debit" class="modal fade" role="dialog">
 	  	<div class="modal-dialog">
 	    <!-- Modal content-->
 		    <div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title text-green">Thêm mới khách hàng</h4>
+					<h4 class="modal-title text-green">Thêm mới Công - Nợ</h4>
 				</div>
 				<div class="modal-body">
 					<form class="form-horizontal">
@@ -66,40 +78,56 @@ div.radio label {
 					        <div class="form-group">
 								<label for="guestName" class="col-sm-3 control-label">Tên khách hàng</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="guestName" placeholder="VD: Cho Tao Tim">
+									<select id="guestName" class="form-control select2" style="width: 100%;">
+									</select>
 								</div>
 					        </div>
 					        <div class="form-group">
-								<label for="guestPhone" class="col-sm-3 control-label">Số điện thoại</label>
+								<label for="payMoney" class="col-sm-3 control-label">Số tiền</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="guestPhone" placeholder="VD: 0912345678">
+									<input value="0" class="form-control" id="payMoney">
 								</div>
 					        </div>
 					        <div class="form-group">
-								<label for="gender" class="col-sm-3 control-label">Giới tính</label>
+								<label for="isDebit" class="col-sm-3 control-label">Hình thức</label>
 								<div class="radio col-sm-9">
 									<div class="col-sm-4">
 							        	<label>
-							            	<input type="radio" value="0" name="gender" checked> Nam
+							            	<input type="radio" value="0" name="isDebit" checked> Công
 							        	</label>
 						        	</div>
 						        	<div class="col-sm-4">
 							        	<label>
-								            <input type="radio" value="1" name="gender"> Nữ
+								            <input type="radio" value="1" name="isDebit"> Nợ
 							        	</label>
 						        	</div>
 							    </div>
 					        </div>
 					        <div class="form-group">
-								<label for="guestAddress" class="col-sm-3 control-label">Địa chỉ</label>
+								<label for="done" class="col-sm-3 control-label">Đã quyết toán</label>
+								<div class="radio col-sm-9">
+									<div class="col-sm-4">
+							        	<label>
+								            <input type="radio" value="0" name="done" checked> Chưa
+							        	</label>
+						        	</div>
+						        	<div class="col-sm-4">
+							        	<label>
+							            	<input type="radio" value="1" name="done"> Hoàn thành
+							        	</label>
+						        	</div>
+							    </div>
+					        </div>
+					        <div class="form-group">
+								<label for="date_done" class="col-sm-3 control-label">Ngày quyết toán</label>
 								<div class="col-sm-9">
-									<input type="text" class="form-control" id="guestAddress" placeholder="Nhập địa chỉ">
+									<input type="text" class="form-control" id="dateDone" value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}" data-date-format="dd/mm/yyyy">
 								</div>
 					        </div>
 					        <div class="form-group">
-								<label for="guestNote" class="col-sm-3 control-label">Ghi chú</label>
+								<label for="note" class="col-sm-3 control-label">Ghi chú</label>
 								<div class="col-sm-9">
-									<textarea rows="4" type="text" class="form-control" id="guestNote" placeholder="Ghi chú về khách hàng"></textarea>
+									<textarea rows="4" type="text" class="form-control" id="note" placeholder="Ghi chú về khoản công nợ này (nếu có)"></textarea>
 								</div>
 					        </div>
 					    </div>
@@ -107,7 +135,7 @@ div.radio label {
 				</div>
 				<div class="modal-footer">
 					<button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-rotate-left"></i> Hủy bỏ</button>
-					<button type="button" id="btnSaveGuest" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
+					<button type="button" id="btn_save_debit" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
 				</div>
 		    </div>
 	  	</div>
@@ -115,7 +143,7 @@ div.radio label {
 	<!-- Modal Create-->
 
 	<!-- Modal View, Edit, Delete-->
-	<div id="info_guest" class="modal fade" role="dialog">
+{{-- 	<div id="info_guest" class="modal fade" role="dialog">
 	  	<div class="modal-dialog">
 	    <!-- Modal content-->
 		    <div class="modal-content">
@@ -181,7 +209,7 @@ div.radio label {
 				</div>
 		    </div>
 	  	</div>
-	</div>
+	</div> --}}
 	<!-- Modal View, Edit, Delete-->
 @endsection
 
@@ -189,8 +217,16 @@ div.radio label {
 <!-- DataTables -->
 <script src="{{ asset('plugins/datatables.net/js/jquery.dataTables.min.js') }}"></script>
 <script src="{{ asset('plugins/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
+<!-- bootstrap datepicker -->
+<script src="{{ asset('plugins/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js') }}"></script>
+<script src="{{ asset('plugins/bootstrap-datepicker/dist/locales/bootstrap-datepicker.vi.min.js') }}" charset="UTF-8"></script>
+<!-- InputMask -->
+<script src="{{ asset('plugins/inputmask/dist/jquery.inputmask.bundle.js') }}"></script>
 <!-- iCheck -->
 <script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
+<!-- Select2 -->
+<script src="{{ asset('plugins/select2/dist/js/select2.full.min.js') }}"></script>
+<script src="{{ asset('plugins/select2/dist/js/i18n/vi.js') }}"></script>
 @endsection
 
 @section('js_ext')
@@ -200,10 +236,121 @@ div.radio label {
 	    }
 	});
 
+	{{-- Date picker --}}
+    $('#dateDone').datepicker({
+      autoclose: true,
+      language: 'vi'
+    });
+	{{-- End Date picker --}}
+
 	{{-- Setup iCheck --}}
 	$('input').iCheck({
 	    radioClass: 'iradio_flat-blue',
 	    checkboxClass: 'icheckbox_flat-blue',
 	});
 	{{-- End Setup iCheck --}}
+
+	{{-- Setup Select2 --}}
+	$('#guestName').select2({
+		language: 'vi',
+		placeholder: 'Nhập tên khách hàng',
+		ajax: {
+			url: '{{ route('membersname') }}',
+			cache: true,
+			dataType: 'json',
+			delay: 300,
+			processResults: function(data) {
+				return {
+					results: $.map(data, function(item) {
+						return {
+	                        text: item.member_name +  ' - ' + item.member_phone,
+	                        id: item.id
+	                    }
+					})
+				}
+			}
+		}
+	});
+	{{-- End Setup Select2 --}}
+
+	{{-- Setup InputMask --}}
+	$('#payMoney').inputmask("numeric", {
+		radixPoint: "",
+	    groupSeparator: ".",
+	    autoGroup: true,
+	    rightAlign: false,
+	    autoUnmask: true,
+        allowMinus: false
+	});
+	{{-- End Setup InputMask --}}
+
+	{{-- Setup Datatables --}}
+	$('#debits-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: {
+        	url: '{{ route('debits') }}',
+        	type: 'post'
+        },
+        language: {
+		    "emptyTable":     "{{ trans('datatables.emptyTable') }}",
+		    "info":           "{{ trans('datatables.info') }}",
+		    "infoEmpty":      "{{ trans('datatables.infoEmpty') }}",
+		    "infoFiltered":   "{{ trans('datatables.infoFiltered') }}",
+		    "lengthMenu":     "{{ trans('datatables.lengthMenu') }}",
+		    "loadingRecords": "{{ trans('datatables.loadingRecords') }}",
+		    "processing":     "{{ trans('datatables.processing') }}",
+		    "search":         "{{ trans('datatables.search') }}",
+		    "zeroRecords":    "{{ trans('datatables.zeroRecords') }}",
+		    "paginate": {
+		        "first":      "{{ trans('datatables.paginate.first') }}",
+		        "last":       "{{ trans('datatables.paginate.last') }}",
+		        "next":       "{{ trans('datatables.paginate.next') }}",
+		        "previous":   "{{ trans('datatables.paginate.previous') }}"
+		    },
+		    "aria": {
+		        "sortAscending":  "{{ trans('datatables.aria.sortAscending') }}",
+		        "sortDescending": "{{ trans('datatables.aria.sortDescending') }}"
+		    }
+		}
+    });
+    {{-- End Datatables --}}
+
+
+	$('#btn_save_debit').on('click', function(){
+		let id 		  = $('#guestName').val();
+		let payMoney  = $('#payMoney').val() || 0;
+		let isDebit	  = $("input[name='isDebit']:checked").val();
+		let done	  = $("input[name='done']:checked").val();
+		let dateDone = $('#dateDone').val();
+		let note	  = $('#note').val();
+
+		data = {
+			id 			: id,
+			payMoney 	: payMoney,
+			isDebit 	: isDebit,
+			done 		: done,
+			dateDone 	: dateDone,
+			note 		: note
+		}
+
+		$.ajax({
+			url: '{{ route('debits.store') }}',
+			type: 'POST',
+			data: data,
+			async: false
+		})
+		.done(function(data) {
+			$('#payMoney').val(0);
+			$('input:radio[name="isDebit"][value="0"]').iCheck('check');
+			$('input:radio[name="done"][value="0"]').iCheck('check');
+			$('#dateDone').val('{{ \Carbon\Carbon::now()->format('d/m/Y') }}');
+			$('#note').val('');
+			$('#create_debit').modal('toggle');
+		})
+		.always(function() {
+			$('#debits-table').DataTable().ajax.reload();
+		});
+	});
+
 @endsection
