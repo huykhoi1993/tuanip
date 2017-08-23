@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Config;
 use Carbon\Carbon;
 use Datatables;
 
@@ -80,7 +81,8 @@ class ProductController extends Controller
                                 'is_quocte'         => $is_quocte,
                                 'product_info'      => $product_info,
                                 'vendor_id'         => $vendor_id,
-                                'quantity_in_stock' => $quantity_in_stock,
+                                // 'quantity_in_stock' => $quantity_in_stock,
+                                'quantity_in_stock' => rand(0,100),
                                 'created_at'        => Carbon::now()
                             ]);
                             $success += 1;
@@ -172,12 +174,12 @@ class ProductController extends Controller
 
         return Datatables::of($products)
             ->editColumn('is_quocte', function ($product) {
-                return $product->is_quocte == 1 ? 'Quốc tế' : 'Lock';
+                return $product->is_quocte == 1 ? Config::get('array.VERSIONS.1') : Config::get('array.VERSIONS.0');
             })
             ->editColumn('created_at', function ($product) {
                 return $product->created_at ? with(new Carbon($product->created_at))->format('d/m/Y') : '';
             })
-            ->make();
+            ->make(true);
     }
 
     public function getProductsName()

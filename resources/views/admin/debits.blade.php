@@ -98,7 +98,7 @@ div.radio label {
 		</div>
 		<div class="box-body">
 			<div class="table-responsive">
-				<table id="debits-table" class="table table-bordered table-hover">
+				<table id="debits-table" class="table table-bordered table-striped table-hover">
 					<thead>
 						<tr>
 							<td>STT</td>
@@ -110,6 +110,17 @@ div.radio label {
 							<td>Ngày giao dịch</td>
 						</tr>
 					</thead>
+					<tfoot>
+						<tr>
+							<td>STT</td>
+							<td>Khách hàng (SĐT)</td>
+							<td>Số tiền</td>
+							<td>Công (Nợ)</td>
+							<td>Thanh toán</td>
+							<td>Ghi chú</td>
+							<td>Ngày giao dịch</td>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>
@@ -194,75 +205,6 @@ div.radio label {
 	</div>
 	<!-- Modal Create-->
 
-	<!-- Modal View, Edit, Delete-->
-{{-- 	<div id="info_guest" class="modal fade" role="dialog">
-	  	<div class="modal-dialog">
-	    <!-- Modal content-->
-		    <div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title text-green">Thông tin khách hàng</h4>
-				</div>
-				<div class="modal-body">
-					<form class="form-horizontal">
-					    <div class="box-body">
-					        <div class="form-group">
-								<label for="info_guestName" class="col-sm-3 control-label">Tên khách hàng</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="info_guestName">
-								</div>
-					        </div>
-					        <div class="form-group">
-								<label for="info_guestPhone" class="col-sm-3 control-label">Số điện thoại</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="info_guestPhone">
-								</div>
-					        </div>
-					        <div class="form-group">
-								<label for="info_gender" class="col-sm-3 control-label">Giới tính</label>
-								<div class="radio col-sm-9">
-									<div class="col-sm-4">
-							        	<label>
-							            	<input type="radio" value="0" name="info_gender"> Nam
-							        	</label>
-						        	</div>
-						        	<div class="col-sm-4">
-							        	<label>
-								            <input type="radio" value="1" name="info_gender"> Nữ
-							        	</label>
-						        	</div>
-							    </div>
-					        </div>
-					        <div class="form-group">
-								<label for="info_guestAddress" class="col-sm-3 control-label">Địa chỉ</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="info_guestAddress">
-								</div>
-					        </div>
-					        <div class="form-group">
-								<label for="info_debt" class="col-sm-3 control-label">Công Nợ</label>
-								<div class="col-sm-9">
-									<input type="number" class="form-control" id="info_debt" disabled="true">
-								</div>
-					        </div>
-					        <div class="form-group">
-								<label for="info_guestNote" class="col-sm-3 control-label">Ghi chú</label>
-								<div class="col-sm-9">
-									<textarea rows="2" type="text" class="form-control" id="info_guestNote"></textarea>
-								</div>
-					        </div>
-					    </div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" id="btn_delete" class="btn btn-default btn-flat btn-danger pull-left"><i class="fa fa-trash"></i> Xóa</button>
-					<button type="button" class="btn btn-default btn-flat"  data-dismiss="modal"><i class="fa fa-rotate-left"></i> Trở về</button>
-					<button type="button" id="btn_update" class="btn btn-default btn-flat btn-success"><i class="fa fa-refresh"></i> Cập nhật</button>
-				</div>
-		    </div>
-	  	</div>
-	</div> --}}
-	<!-- Modal View, Edit, Delete-->
 @endsection
 
 @section('lib_js_ext')

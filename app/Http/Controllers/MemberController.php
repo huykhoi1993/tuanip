@@ -135,7 +135,7 @@ class MemberController extends Controller
             ->editColumn('is_female', function ($member) {
                 return $member->is_female ? 'Nữ' : 'Nam';
             })
-            ->make();
+            ->make(true);
 	}
 
     public function getMembersName(Request $request)

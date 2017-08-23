@@ -14,11 +14,11 @@ table#members-table thead tr td,
 	text-align: center;
 }
 
-table#members-table tbody tr td:nth-child(6) {
+table#members-table tr td:nth-child(6) {
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
-	max-width: 150px;
+	max-width: 100px ! important;
 }
 
 div.radio div.col-sm-4,
@@ -55,6 +55,17 @@ div.radio label {
 							<td>Công - Nợ</td>
 						</tr>
 					</thead>
+					<tfoot>
+						<tr>
+							<td>STT</td>
+							<td>Tên</td>
+							<td>SĐT</td>
+							<td>Giới tính</td>
+							<td>Địa chỉ</td>
+							<td>Ghi chú</td>
+							<td>Công - Nợ</td>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>
@@ -245,7 +256,28 @@ div.radio label {
 		        "sortAscending":  "{{ trans('datatables.aria.sortAscending') }}",
 		        "sortDescending": "{{ trans('datatables.aria.sortDescending') }}"
 		    }
-		}
+		},
+		columns: [
+            {data: 'id', name: 'id'},
+            {data: 'member_name', name: 'member_name'},
+            {data: 'member_phone', name: 'member_phone'},
+            {data: 'is_female', name: 'is_female', searchable: false},
+            {data: 'member_address', name: 'member_address'},
+            {data: 'member_note', name: 'member_note', width: '25%'},
+            {data: 'debt', name: 'debt'},
+        ],
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement("input");
+                $(input).appendTo($(column.footer()).empty())
+                .on('change', function () {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                    column.search(val ? val : '', true, false).draw();
+                });
+            });
+        }
     });
     {{-- End Datatables --}}
 

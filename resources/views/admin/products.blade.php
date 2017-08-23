@@ -59,6 +59,20 @@ table#products-table thead tr td,
 							<td>Ngày tạo</td>
 						</tr>
 					</thead>
+					<tfoot>
+						<tr>
+							<td>Mã SP</td>
+							<td>Sản phẩm</td>
+							<td>Màu</td>
+							<td>Bộ nhớ</td>
+							<td>Clượng</td>
+							<td>Loại</td>
+							<td>Nhà SX</td>
+							<td>Số máy</td>
+							<td>Ghi chú</td>
+							<td>Ngày tạo</td>
+						</tr>
+					</tfoot>
 				</table>
 			</div>
 		</div>
@@ -383,7 +397,31 @@ table#products-table thead tr td,
 		        "sortAscending":  "{{ trans('datatables.aria.sortAscending') }}",
 		        "sortDescending": "{{ trans('datatables.aria.sortDescending') }}"
 		    }
-		}
+		},
+		columns: [
+            {data: 'id', name: 'id'},
+            {data: 'product_name', name: 'product_name'},
+            {data: 'color_product', name: 'color_product'},
+            {data: 'storage_product', name: 'storage_product'},
+            {data: 'quality_product', name: 'quality_product'},
+            {data: 'is_quocte', name: 'is_quocte'},
+            {data: 'vendor_name', name: 'vendor_name'},
+            {data: 'quantity_in_stock', name: 'quantity_in_stock'},
+            {data: 'product_info', name: 'product_info'},
+            {data: 'created_at', name: 'created_at'},
+        ],
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement("input");
+                $(input).appendTo($(column.footer()).empty())
+                .on('change', function () {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                    column.search(val ? val : '', true, false).draw();
+                });
+            });
+        }
     });
     {{-- End Datatables --}}
 
