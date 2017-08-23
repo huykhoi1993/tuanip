@@ -36,6 +36,58 @@ div.radio label {
 @endsection
 
 @section('content')
+
+	<div class="row">
+	    <div class="col-md-3 col-sm-6 col-xs-12">
+	        <div class="info-box button" id="creditAll">
+	            <span class="info-box-icon bg-aqua"><i class="fa fa-plus"></i></span>
+	            <div class="info-box-content">
+	                <span class="info-box-text">Tổng công toàn phần</span>
+	                <span class="info-box-number">57.650.000</span>
+	            </div>
+	            <!-- /.info-box-content -->
+	        </div>
+	        <!-- /.info-box -->
+	    </div>
+	    <!-- /.col -->
+	    <div class="col-md-3 col-sm-6 col-xs-12">
+	        <div class="info-box">
+	            <span class="info-box-icon bg-green"><i class="fa fa-minus"></i></span>
+	            <div class="info-box-content">
+	                <span class="info-box-text">Tổng nợ toàn phần</span>
+	                <span class="info-box-number">12.350.000</span>
+	            </div>
+	            <!-- /.info-box-content -->
+	        </div>
+	        <!-- /.info-box -->
+	    </div>
+	    <!-- /.col -->
+	    <div class="col-md-3 col-sm-6 col-xs-12">
+	        <div class="info-box">
+	            <span class="info-box-icon bg-yellow"><i class="fa fa-calendar-plus-o"></i></span>
+	            <div class="info-box-content">
+	                <span class="info-box-text">Tổng công tháng này</span>
+	                <span class="info-box-number">7.650.000</span>
+	            </div>
+	            <!-- /.info-box-content -->
+	        </div>
+	        <!-- /.info-box -->
+	    </div>
+	    <!-- /.col -->
+	    <div class="col-md-3 col-sm-6 col-xs-12">
+	        <div class="info-box">
+	            <span class="info-box-icon bg-red"><i class="fa fa-calendar-minus-o"></i></span>
+	            <div class="info-box-content">
+	                <span class="info-box-text">Tổng nợ tháng này</span>
+	                <span class="info-box-number">4.500.000</span>
+	            </div>
+	            <!-- /.info-box-content -->
+	        </div>
+	        <!-- /.info-box -->
+	    </div>
+	    <!-- /.col -->
+	</div>
+
 	<div class="form-group">
 		<button class="btn btn-primary btn-flat" id="btn_add_debit" data-toggle="modal" data-target="#create_debit"><i class="fa fa-calendar-plus-o"></i> Thêm mới</button>
 	</div>
@@ -312,7 +364,28 @@ div.radio label {
 		        "sortAscending":  "{{ trans('datatables.aria.sortAscending') }}",
 		        "sortDescending": "{{ trans('datatables.aria.sortDescending') }}"
 		    }
-		}
+		},
+		columns: [
+            {data: 'id', name: 'id'},
+            {data: 'member_name', name: 'member_name'},
+            {data: 'total_amount', name: 'total_amount'},
+            {data: 'is_dedit', name: 'is_dedit'},
+            {data: 'pay_done', name: 'pay_done'},
+            {data: 'debit_note', name: 'debit_note'},
+            {data: 'created_at', name: 'created_at'}
+        ],
+        initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement("input");
+                $(input).appendTo($(column.footer()).empty())
+                .on('change', function () {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                    column.search(val ? val : '', true, false).draw();
+                });
+            });
+        }
     });
     {{-- End Datatables --}}
 
@@ -353,4 +426,6 @@ div.radio label {
 		});
 	});
 
+	$('#creditAll').on('click', function(){
+	});
 @endsection

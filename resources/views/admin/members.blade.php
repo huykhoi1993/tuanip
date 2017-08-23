@@ -177,7 +177,7 @@ div.radio label {
 					        <div class="form-group">
 								<label for="info_guestNote" class="col-sm-3 control-label">Ghi chú</label>
 								<div class="col-sm-9">
-									<textarea rows="2" type="text" class="form-control" id="info_guestNote"></textarea>
+									<textarea rows="4" type="text" class="form-control" id="info_guestNote"></textarea>
 								</div>
 					        </div>
 					    </div>

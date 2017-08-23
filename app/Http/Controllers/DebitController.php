@@ -113,14 +113,13 @@ class DebitController extends Controller
 
     }
 
-    public function getDebits()
+    public function getDebits(Request $request)
     {
         $debits = DB::table('debits')
                     ->join('members', 'members.id', '=', 'debits.member_id')
                     ->select(
                         'debits.id',
-                        'members.member_name',
-                        'members.member_phone',
+                        DB::raw("CONCAT(members.member_name,' - (',members.member_phone, ')') as member_name"),
                         'debits.total_amount',
                         'debits.is_dedit',
                         'debits.pay_done',
@@ -129,21 +128,23 @@ class DebitController extends Controller
                     )
                     ->get();
 
-        // return response()->json($debits);
-        return Datatables::of($debits)
+        $datatables = Datatables::of($debits)
             ->editColumn('total_amount', function ($depot) {
                 return number_format($depot->total_amount, 0, ",", ".");
             })
             ->editColumn('is_dedit', function ($debit) {
-                return $debit->is_dedit == 1 ? 'Nợ' : 'Công';
+                return $debit->is_dedit == 1 ? 'Nợ' : '<b>Công</b>';
             })
             ->editColumn('pay_done', function ($debit) {
                 return $debit->pay_done == 1 ? 'Đã thanh toán' : 'Chưa';
             })
-            ->editColumn('member_name', function ($debit) {
-                return $debit->member_phone ? $debit->member_name . ' (' . $debit->member_phone . ')' : $debit->member_name;
+            ->editColumn('created_at', function ($product) {
+                return $product->created_at ? with(new Carbon($product->created_at))->format('d/m/Y') : '';
             })
             ->removeColumn('member_phone')
-            ->make();
+            ->rawColumns(['is_dedit'])
+            ->make(true);
+
+        return $datatables;
     }
 }
