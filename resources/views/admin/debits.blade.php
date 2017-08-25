@@ -36,60 +36,68 @@ div.radio label {
 @endsection
 
 @section('content')
-
 	<div class="row">
+		@isset ( $total_credit)	    
 	    <div class="col-md-3 col-sm-6 col-xs-12">
 	        <div class="info-box button" id="creditAll">
 	            <span class="info-box-icon bg-aqua"><i class="fa fa-plus"></i></span>
 	            <div class="info-box-content">
 	                <span class="info-box-text">Tổng công toàn phần</span>
-	                <span class="info-box-number">57.650.000</span>
+	                <span class="info-box-number">{{ $total_credit }} VND</span>
 	            </div>
 	            <!-- /.info-box-content -->
 	        </div>
 	        <!-- /.info-box -->
 	    </div>
 	    <!-- /.col -->
+		@endisset
+		@isset ( $total_dedit)	
 	    <div class="col-md-3 col-sm-6 col-xs-12">
 	        <div class="info-box">
 	            <span class="info-box-icon bg-green"><i class="fa fa-minus"></i></span>
 	            <div class="info-box-content">
 	                <span class="info-box-text">Tổng nợ toàn phần</span>
-	                <span class="info-box-number">12.350.000</span>
+	                <span class="info-box-number">{{ $total_dedit }} VND</span>
 	            </div>
 	            <!-- /.info-box-content -->
 	        </div>
 	        <!-- /.info-box -->
 	    </div>
 	    <!-- /.col -->
+	    @endisset
+		@isset ( $total_credit_no_pay)
 	    <div class="col-md-3 col-sm-6 col-xs-12">
 	        <div class="info-box">
 	            <span class="info-box-icon bg-yellow"><i class="fa fa-calendar-plus-o"></i></span>
 	            <div class="info-box-content">
-	                <span class="info-box-text">Tổng công tháng này</span>
-	                <span class="info-box-number">7.650.000</span>
+	                <span class="info-box-text">Tổng công chưa thanh toán</span>
+	                <span class="info-box-number">{{ $total_credit_no_pay }} VND</span>
 	            </div>
 	            <!-- /.info-box-content -->
 	        </div>
 	        <!-- /.info-box -->
 	    </div>
 	    <!-- /.col -->
+	    @endisset
+		@isset ( $total_dedit_no_pay)
 	    <div class="col-md-3 col-sm-6 col-xs-12">
 	        <div class="info-box">
 	            <span class="info-box-icon bg-red"><i class="fa fa-calendar-minus-o"></i></span>
 	            <div class="info-box-content">
-	                <span class="info-box-text">Tổng nợ tháng này</span>
-	                <span class="info-box-number">4.500.000</span>
+	                <span class="info-box-text">Tổng nợ chưa thanh toán</span>
+	                <span class="info-box-number">{{ $total_dedit_no_pay }} VND</span>
 	            </div>
 	            <!-- /.info-box-content -->
 	        </div>
 	        <!-- /.info-box -->
 	    </div>
 	    <!-- /.col -->
+	    @endisset
 	</div>
 
 	<div class="form-group">
 		<button class="btn btn-primary btn-flat" id="btn_add_debit" data-toggle="modal" data-target="#create_debit"><i class="fa fa-calendar-plus-o"></i> Thêm mới</button>
+		<button class="btn btn-success btn-flat" id="btn_pay_debit" data-toggle="modal" data-target="#pay_debit"><i class="fa fa-money"></i> Thanh toán</button>
 	</div>
 
 	<div class="box">
@@ -203,8 +211,77 @@ div.radio label {
 		    </div>
 	  	</div>
 	</div>
-	<!-- Modal Create-->
+	<!-- End Modal Create-->
 
+	<!-- Modal Pay-->
+	<div id="pay_debit" class="modal fade" role="dialog">
+	  	<div class="modal-dialog">
+	    <!-- Modal content-->
+		    <div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title text-green">Thanh toán Công - Nợ</h4>
+				</div>
+				<div class="modal-body">
+					<form class="form-horizontal">
+					    <div class="box-body">
+					        <div class="form-group">
+								<label for="pay_guestName" class="col-sm-3 control-label">Tên khách hàng</label>
+								<div class="col-sm-9">
+									<select id="pay_guestName" class="form-control select2" style="width: 100%;">
+									</select>
+								</div>
+					        </div>
+					        <div class="form-group">
+								<label for="pay_payMoney" class="col-sm-3 control-label">Số tiền</label>
+								<div class="col-sm-9">
+									<input value="0" class="form-control" id="pay_payMoney">
+								</div>
+					        </div>
+					        <div class="form-group">
+								<label for="isDebit" class="col-sm-3 control-label">Hình thức</label>
+								<div class="radio col-sm-9">
+									<div class="col-sm-4">
+							        	<label>
+							            	<input type="radio" value="0" name="isDebit" checked> Công
+							        	</label>
+						        	</div>
+						        	<div class="col-sm-4">
+							        	<label>
+								            <input type="radio" value="1" name="isDebit"> Nợ
+							        	</label>
+						        	</div>
+							    </div>
+					        </div>
+					        <div class="form-group">
+								<label for="pay_moneyPay" class="col-sm-3 control-label">Số tiền</label>
+								<div class="radio col-sm-9">
+									<input class="form-control" name="pay_moneyPay" id="pay_moneyPay">
+							    </div>
+					        </div>
+					        <div class="form-group">
+								<label for="pay_dateDone" class="col-sm-3 control-label">Ngày quyết toán</label>
+								<div class="col-sm-9">
+									<input type="text" class="form-control" id="pay_dateDone" value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}" data-date-format="dd/mm/yyyy">
+								</div>
+					        </div>
+					        <div class="form-group">
+								<label for="pay_note" class="col-sm-3 control-label">Ghi chú</label>
+								<div class="col-sm-9">
+									<textarea rows="4" type="text" class="form-control" id="pay_note" placeholder="Ghi chú về đợt thanh toán công nợ này (nếu có)"></textarea>
+								</div>
+					        </div>
+					    </div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-rotate-left"></i> Hủy bỏ</button>
+					<button type="button" id="btn_save_pay" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
+				</div>
+		    </div>
+	  	</div>
+	</div>
+	<!-- End Modal Pay-->
 @endsection
 
 @section('lib_js_ext')
@@ -268,7 +345,7 @@ div.radio label {
 	{{-- End Setup Select2 --}}
 
 	{{-- Setup InputMask --}}
-	$('#payMoney').inputmask("numeric", {
+	$('#payMoney, #pay_moneyPay').inputmask("numeric", {
 		radixPoint: "",
 	    groupSeparator: ".",
 	    autoGroup: true,

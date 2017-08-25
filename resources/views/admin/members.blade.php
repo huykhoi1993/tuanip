@@ -246,8 +246,7 @@ div.radio label {
 <!-- iCheck -->
 <script src="{{ asset('plugins/iCheck/icheck.min.js') }}"></script>
 @endsection
-
-@section('js_ext')
+@section('js_ext')	
 	var id = -1;
 	$.ajaxSetup({
 	    headers: {

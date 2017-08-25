@@ -11,7 +11,22 @@ class DebitController extends Controller
 {
     public function index()
     {
-    	return view('admin.debits');
+        $results = DB::table('debits')
+                    ->select(
+                        DB::raw('sum(case when is_dedit = 0 then total_amount else 0 end) as total_credit'),
+                        DB::raw('sum(case when is_dedit = 0 and pay_done = 0 then total_amount else 0 end) as total_credit_no_pay'),
+                        DB::raw('sum(case when is_dedit = 1 then total_amount else 0 end) as total_dedit'),
+                        DB::raw('sum(case when is_dedit = 1 and pay_done = 0 then total_amount else 0 end) as total_dedit_no_pay')
+                    )
+                    ->get();
+
+        // return $results;            
+    	return view('admin.debits',[
+                'total_credit'          => number_format($results[0]->total_credit, 0, ",", "."),
+                'total_credit_no_pay'   => number_format($results[0]->total_credit_no_pay, 0, ",", "."),
+                'total_dedit'           => number_format(-$results[0]->total_dedit, 0, ",", "."),
+                'total_dedit_no_pay'    => number_format(-$results[0]->total_dedit_no_pay, 0, ",", ".")
+            ]);
     }
 
     public function store(Request $request)
