@@ -16,8 +16,26 @@ class ProductController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index()
-    {
-        return view('admin.products');
+    {   
+        $total_products = DB::table('products')
+                            ->select(
+                                DB::raw('sum(quantity_in_stock) as quantity')
+                            )
+                            ->get();
+
+        $most_product = DB::table('products')
+                            ->select(
+                                'product_name as name',
+                                DB::raw('sum(quantity_in_stock) as quantity')
+                            )
+                            ->groupBy('product_name')
+                            ->orderBy('quantity', 'DESC')
+                            ->first();
+
+        return view('admin.products',[
+                'total_products'    => $total_products[0]->quantity,
+                'most_product'      => $most_product
+            ]);
     }
 
     /**
@@ -82,8 +100,9 @@ class ProductController extends Controller
                                 'product_info'      => $product_info,
                                 'vendor_id'         => $vendor_id,
                                 // 'quantity_in_stock' => $quantity_in_stock,
-                                'quantity_in_stock' => rand(0,100),
-                                'created_at'        => Carbon::now()
+                                'quantity_in_stock' => rand(0,100), //Hardcode
+                                'created_at'        => Carbon::now(),
+                                'updated_at'        => Carbon::now()
                             ]);
                             $success += 1;
                         }
@@ -161,7 +180,6 @@ class ProductController extends Controller
         }
     }    
 
-
     /**
      * get all products
      *
@@ -170,15 +188,27 @@ class ProductController extends Controller
      */
     public function getProducts()
     {
-        $products = DB::select("select id, product_name, color_product, storage_product, quality_product, is_quocte, (select category_name from categories t2 where t2.id = t1.vendor_id) as vendor_name, quantity_in_stock, product_info, created_at from products t1 where 1");
+        $products = DB::table('products')
+                    ->join('categories', 'categories.id', '=', 'products.vendor_id')
+                    ->select(
+                        'products.id',
+                        'products.product_name',
+                        'products.color_product',
+                        'products.storage_product',
+                        'products.quality_product',
+                        DB::raw('CASE products.is_quocte WHEN 0 THEN "' 
+                            . Config::get('array.VERSIONS.0') 
+                            . '" WHEN 1 THEN "' 
+                            . Config::get('array.VERSIONS.1') 
+                            . '" END AS version'),
+                        'categories.category_name AS vendor_name',
+                        'products.quantity_in_stock',
+                        'products.product_info',
+                        DB::raw("DATE_FORMAT(products.updated_at, '%d/%m/%Y') AS updated_at")
+                    )
+                    ->get();
 
         return Datatables::of($products)
-            ->editColumn('is_quocte', function ($product) {
-                return $product->is_quocte == 1 ? Config::get('array.VERSIONS.1') : Config::get('array.VERSIONS.0');
-            })
-            ->editColumn('created_at', function ($product) {
-                return $product->created_at ? with(new Carbon($product->created_at))->format('d/m/Y') : '';
-            })
             ->make(true);
     }
 

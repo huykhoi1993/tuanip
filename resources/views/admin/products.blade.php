@@ -35,6 +35,40 @@ table#products-table thead tr td,
 @endsection
 
 @section('content')
+	<div class="row">
+		@isset ( $total_products)
+	    <div class="col-md-3 col-sm-6 col-xs-12">
+	        <div class="info-box button" id="creditAll">
+	            <span class="info-box-icon bg-aqua"><i class="fa fa-opencart"></i></span>
+	            <div class="info-box-content">
+	                <span class="info-box-text">Tổng sản phẩm</span>
+	                <span class="info-box-number">{{ $total_products }}</span>
+	                <span class="info-box-text"><i>Sản phẩm</i></span>
+	            </div>
+	            <!-- /.info-box-content -->
+	        </div>
+	        <!-- /.info-box -->
+	    </div>
+	    <!-- /.col -->
+	    @endisset
+	    @isset ( $most_product)
+	    <div class="col-md-3 col-sm-6 col-xs-12">
+	        <div class="info-box">
+	            <span class="info-box-icon bg-red"><i class="fa fa-cart-plus"></i></span>
+	            <div class="info-box-content">
+	                <span class="info-box-text">Loại nhiều nhất
+	                	<br>
+	                	<span class="text-primary"><i>{{ $most_product->name }}</i></span>
+	                </span>
+	                <span class="info-box-number">{{ $most_product->quantity }}</span>
+	            </div>
+	            <!-- /.info-box-content -->
+	        </div>
+	        <!-- /.info-box -->
+	    </div>
+	    <!-- /.col -->
+	    @endisset
+	</div>
 	<div class="form-group">
 		<button class="btn btn-primary btn-flat" id="btn_add_product" data-toggle="modal" data-target="#create_product"><i class="fa fa-plus"></i> Thêm mới</button>
 	</div>
@@ -56,7 +90,7 @@ table#products-table thead tr td,
 							<td>Nhà SX</td>
 							<td>Số máy</td>
 							<td>Ghi chú</td>
-							<td>Ngày tạo</td>
+							<td>Ngày cập nhật</td>
 						</tr>
 					</thead>
 					<tfoot>
@@ -70,7 +104,7 @@ table#products-table thead tr td,
 							<td>Nhà SX</td>
 							<td>Số máy</td>
 							<td>Ghi chú</td>
-							<td>Ngày tạo</td>
+							<td>Ngày cập nhật</td>
 						</tr>
 					</tfoot>
 				</table>
@@ -404,11 +438,11 @@ table#products-table thead tr td,
             {data: 'color_product', name: 'color_product'},
             {data: 'storage_product', name: 'storage_product'},
             {data: 'quality_product', name: 'quality_product'},
-            {data: 'is_quocte', name: 'is_quocte'},
+            {data: 'version', name: 'version'},
             {data: 'vendor_name', name: 'vendor_name'},
             {data: 'quantity_in_stock', name: 'quantity_in_stock'},
             {data: 'product_info', name: 'product_info'},
-            {data: 'created_at', name: 'created_at'},
+            {data: 'updated_at', name: 'updated_at'},
         ],
         initComplete: function () {
             this.api().columns().every(function () {

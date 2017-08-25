@@ -10,7 +10,28 @@ class MemberController extends Controller
 {
     public function index()
 	{
-		return view('admin.members');
+        $total_debit = DB::table('members')
+                        ->select(
+                            DB::raw('sum(debt) AS total')
+                        )
+                        ->where([
+                            ['debt', '<', 0]
+                        ])
+                        ->get();
+
+        $total_credit = DB::table('members')
+                        ->select(
+                            DB::raw('sum(debt) AS total')
+                        )
+                        ->where([
+                            ['debt', '>', 0]
+                        ])
+                        ->get();
+
+		return view('admin.members',[
+                'total_credit'  => number_format($total_credit[0]->total, 0, ",", "."),
+                'total_debit'   => number_format(-$total_debit[0]->total, 0, ",", ".")
+            ]);
 	}
 
 	public function store(Request $request)
@@ -129,11 +150,20 @@ class MemberController extends Controller
 	public function getMembers()
 	{
 		$members = DB::table('members')
+                    ->select(
+                        'id',
+                        'member_name',
+                        'member_phone',
+                        DB::raw('CASE is_female WHEN 0 THEN "Nam" WHEN 1 THEN "Nữ" END AS is_female'),
+                        'member_address',
+                        'member_note',
+                        'debt'
+                    )
 					->get();
 
 		return Datatables::of($members)
-            ->editColumn('is_female', function ($member) {
-                return $member->is_female ? 'Nữ' : 'Nam';
+            ->editColumn('debt', function ($member) {
+                return number_format($member->debt, 0, ",", ".");
             })
             ->make(true);
 	}

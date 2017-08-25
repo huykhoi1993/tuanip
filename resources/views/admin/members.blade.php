@@ -21,6 +21,10 @@ table#members-table tr td:nth-child(6) {
 	max-width: 100px ! important;
 }
 
+table#members-table tr td:nth-child(7) {
+	text-align: right;
+}
+
 div.radio div.col-sm-4,
 div.radio label {
 	padding-left: 0;
@@ -33,6 +37,36 @@ div.radio label {
 @endsection
 
 @section('content')
+	<div class="row">
+		@isset ( $total_credit)
+	    <div class="col-md-3 col-sm-6 col-xs-12">
+	        <div class="info-box button" id="creditAll">
+	            <span class="info-box-icon bg-aqua"><i class="fa fa-opencart"></i></span>
+	            <div class="info-box-content">
+	                <span class="info-box-text">Tổng Công</span>
+	                <span class="info-box-number">{{ $total_credit }} VND</span>
+	            </div>
+	            <!-- /.info-box-content -->
+	        </div>
+	        <!-- /.info-box -->
+	    </div>
+	    <!-- /.col -->
+	    @endisset
+	    @isset ( $total_debit)
+	    <div class="col-md-3 col-sm-6 col-xs-12">
+	        <div class="info-box">
+	            <span class="info-box-icon bg-red"><i class="fa fa-cart-plus"></i></span>
+	            <div class="info-box-content">
+	                <span class="info-box-text">Tổng Nợ</span>
+	                <span class="info-box-number">{{ $total_debit }} VND</span>
+	            </div>
+	            <!-- /.info-box-content -->
+	        </div>
+	        <!-- /.info-box -->
+	    </div>
+	    <!-- /.col -->
+	    @endisset
+	</div>
 	<div class="form-group">
 		<button class="btn btn-primary btn-flat" id="btn_add_product" data-toggle="modal" data-target="#create_guest"><i class="fa fa-user-plus"></i> Thêm mới</button>
 	</div>
@@ -261,7 +295,7 @@ div.radio label {
             {data: 'id', name: 'id'},
             {data: 'member_name', name: 'member_name'},
             {data: 'member_phone', name: 'member_phone'},
-            {data: 'is_female', name: 'is_female', searchable: false},
+            {data: 'is_female', name: 'is_female'},
             {data: 'member_address', name: 'member_address'},
             {data: 'member_note', name: 'member_note', width: '25%'},
             {data: 'debt', name: 'debt'},

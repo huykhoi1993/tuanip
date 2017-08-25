@@ -39,285 +39,331 @@ table#depots-table thead tr td {
 @endsection
 
 @section('content')
-<div>
-	<div class="form-group">
-		<button class="btn btn-primary btn-flat" id="btn_imp_depot" data-toggle="modal" data-target="#input_depot">
-			<i class="fa fa-arrow-down"></i> Nhập hàng
-		</button>
-		<button class="btn btn-success btn-flat" id="btn_exp_depot" data-toggle="modal" data-target="#output_depot">
-			<i class="fa fa-arrow-up"></i> Xuất hàng
-		</button>
-	</div>
-	<div class="box">
-		<div class="box-header">
-			<h3 class="box-title text-info">Danh sách các đơn hàng</h3>
-		</div>
-		<div class="box-body">
-			<div class="table-responsive">
-				<table id="depots-table" class="table table-bordered table-striped dataTable">
-					<thead>
-						<tr>
-							<td>Mã đơn</td>
-							<td>Người bán(mua)</td>
-							<td>Sản phẩm</td>
-							<td>Bộ nhớ</td>
-							<td>Màu</td>
-							<td>Slượng</td>
-							<td>Clượng</td>
-							<td>Loại</td>
-							<td>Giá</td>
-							<td>Tổng tiền</td>
-							<td>Thanh toán</td>
-							<td>Ghi chú</td>
-							<td>Ngày tạo</td>
-							<td>Đơn nhập</td>
-						</tr>
-					</thead>
-				</table>
-			</div>
-		</div>
-	</div>
-
-	<!-- Modal Input Depot-->
-	<div id="input_depot" class="modal fade" role="dialog">
-	  	<div class="modal-dialog">
-	    <!-- Modal content-->
-		    <div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title text-green">Thêm mới đơn hàng nhập kho</h4>
-				</div>
-				<div class="modal-body">
-					<form class="form-horizontal">
-					    <div class="box-body">
-					    	<div class="form-group">
-					        	<label for="saler" class="col-sm-3 control-label">Hàng nhập từ</label>
-					        	<div class="col-sm-9">
-						        	<input type="text" class="form-control" id="saler" placeholder="Nhập người bán">
-			                  	</div>
-					        </div>
-					        <div class="form-group">
-					        	<label for="productName" class="col-sm-3 control-label">Sản phẩm</label>
-					        	<div class="col-sm-9">
-					        		<div id="div_productName" class="col-sm-4 form-group">
-							        	<select class="form-control" id="productName" disabled="true">
-					                  	</select>
-				                  	</div>
-					        		<div id="div_storageProduct" class="col-sm-4 form-group">
-					        			<select class="form-control" id="storageProduct" disabled="true">
-					                  	</select>
-					        		</div>
-					        		<div id="div_qualityProduct" class="col-sm-4 form-group">
-					        			<select class="form-control" id="qualityProduct" disabled="true">
-					                  	</select>
-					        		</div>
-			                  	</div>
-					        </div>
-					        <div class="form-group">
-					        	<label for="colorProduct" class="col-sm-3 control-label">Màu sắc</label>
-					        	<div class="col-sm-9">
-					        		<div id="div_colorProduct" class="col-sm-4 form-group">
-							        	<select class="form-control" id="colorProduct" disabled="true">
-					                  	</select>
-				                  	</div>
-					        		<div id="label_quantityProduct" class="col-sm-4 form-group">
-					        			<label class="control-label">Số lượng</label>
-					        		</div>
-					        		<div id="div_quantityProduct" class="col-sm-4 form-group">
-					                	<input type="number" min="1" value="1" class="form-control" id="quantityProduct">
-					        		</div>
-			                  	</div>
-					        </div>
-					        <div class="form-group">
-					        	<label for="versionProduct" class="col-sm-3 control-label">Phiên bản</label>
-					        	<div class="col-sm-9">
-					        		<div id="div_versionProduct" class="col-sm-4 form-group">
-							        	<select class="form-control" id="versionProduct" disabled="true">
-					                  	</select>
-				                  	</div>
-					        		<div id="label_thanhToan" class="col-sm-4 form-group">
-					        			<label class="control-label">Thanh toán</label>
-					        		</div>
-					        		<div id="div_thanhToan" class="col-sm-4 form-group">
-					                	<select class="form-control" id="thanhToan">
-							        		<option value="0">Tiền mặt</option>
-							        		<option value="1" selected="true">Chuyển khoản</option>
-					                  	</select>
-					        		</div>
-			                  	</div>
-					        </div>
-					        <div class="form-group">
-					            <label for="inputDate" class="col-sm-3 control-label">Ngày nhập</label>
-					            <div class="col-sm-9">
-					                <div class="input-group">
-					                  	<span class="input-group-addon">
-					                    	<i class="fa fa-calendar"></i>
-					                  	</span>
-					                  	<input class="form-control pull-right" value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}" id="inputDate" data-date-format="dd/mm/yyyy">
-					                </div>
-					            </div>
-					        </div>
-					        <div class="form-group">
-					            <label for="priceProduct" class="col-sm-3 control-label">Giá thành</label>
-					            <div class="col-sm-9">
-					                <div class="input-group">
-						                <span class="input-group-addon">
-						                	<i class="fa fa-dollar"></i>
-						                </span>
-						                <input class="form-control" id="priceProduct">
-					              	</div>
-					            </div>
-					        </div>
-					        <div class="form-group">
-					            <label for="totalPrice" class="col-sm-3 control-label">Thành tiền</label>
-					            <div class="col-sm-9">
-					                <div class="input-group">
-						                <span class="input-group-addon">
-						                	<i class="fa fa-dollar"></i>
-						                </span>
-						                <input class="form-control bg-orange" id="totalPrice" disabled>
-					              	</div>
-					            </div>
-					        </div>
-					        <div class="form-group">
-					            <label for="depotNote" class="col-sm-3 control-label">Ghi chú</label>
-					            <div class="col-sm-9">
-					                <textarea rows="3" class="form-control" id="depotNote" placeholder="Nhập thông tin về đơn hàng"></textarea>
-					            </div>
-					        </div>
-					    </div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-rotate-left"></i> Hủy bỏ</button>
-					<button type="button" id="btn_save_imp_depot" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
-				</div>
-		    </div>
-	  	</div>
-	</div>
-	<!-- /Modal Input Depot-->
-	
-	<!-- Modal Output Depot-->
-	<div id="output_depot" class="modal fade" role="dialog">
-	  	<div class="modal-dialog">
-	    <!-- Modal content-->
-		    <div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title text-green">Thêm mới đơn hàng xuất kho</h4>
-				</div>
-				<div class="modal-body">
-					<form class="form-horizontal">
-					    <div class="box-body">
-					    	<div class="form-group">
-					        	<label for="buyer" class="col-sm-3 control-label">Hàng xuất cho</label>
-					        	<div class="col-sm-9">
-						        	<input type="text" class="form-control" id="buyer" placeholder="Nhập người mua">
-			                  	</div>
-					        </div>
-					        <div class="form-group">
-					        	<label for="productName" class="col-sm-3 control-label">Sản phẩm</label>
-					        	<div class="col-sm-9">
-					        		<div id="div_productName" class="col-sm-4 form-group">
-							        	<select class="form-control" id="exp_productName" disabled="true">
-					                  	</select>
-				                  	</div>
-					        		<div id="div_storageProduct" class="col-sm-4 form-group">
-					        			<select class="form-control" id="exp_storageProduct" disabled="true">
-					                  	</select>
-					        		</div>
-					        		<div id="div_qualityProduct" class="col-sm-4 form-group">
-					        			<select class="form-control" id="exp_qualityProduct" disabled="true">
-					                  	</select>
-					        		</div>
-			                  	</div>
-					        </div>
-					        <div class="form-group">
-					        	<label for="colorProduct" class="col-sm-3 control-label">Màu sắc</label>
-					        	<div class="col-sm-9">
-					        		<div id="div_colorProduct" class="col-sm-4 form-group">
-							        	<select class="form-control" id="exp_colorProduct" disabled="true">
-					                  	</select>
-				                  	</div>
-					        		<div id="label_quantityProduct" class="col-sm-4 form-group">
-					        			<label class="control-label">Số lượng</label>
-					        		</div>
-					        		<div id="div_quantityProduct" class="col-sm-4 form-group">
-					                	<input type="number" min="1" value="1" class="form-control" id="exp_quantityProduct">
-					        		</div>
-			                  	</div>
-					        </div>
-					        <div class="form-group">
-					        	<label for="versionProduct" class="col-sm-3 control-label">Phiên bản</label>
-					        	<div class="col-sm-9">
-					        		<div id="div_versionProduct" class="col-sm-4 form-group">
-							        	<select class="form-control" id="exp_versionProduct">
-							        		<option value="0">Lock</option>
-							        		<option value="1" selected="true">Quốc tế</option>
-					                  	</select>
-				                  	</div>
-					        		<div id="label_thanhToan" class="col-sm-4 form-group">
-					        			<label class="control-label">Thanh toán</label>
-					        		</div>
-					        		<div id="div_thanhToan" class="col-sm-4 form-group">
-					                	<select class="form-control" id="exp_thanhToan">
-							        		<option value="0">Tiền mặt</option>
-							        		<option value="1" selected="true">Chuyển khoản</option>
-					                  	</select>
-					        		</div>
-			                  	</div>
-					        </div>
-					        <div class="form-group">
-					            <label for="exp_date" class="col-sm-3 control-label">Ngày xuất</label>
-					            <div class="col-sm-9">
-					                <div class="input-group">
-					                  	<span class="input-group-addon">
-					                    	<i class="fa fa-calendar"></i>
-					                  	</span>
-					                  	<input class="form-control pull-right" value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}" id="exp_date" data-date-format="dd/mm/yyyy">
-					                </div>
-					            </div>
-					        </div>
-					        <div class="form-group">
-					            <label for="exp_priceProduct" class="col-sm-3 control-label">Giá thành</label>
-					            <div class="col-sm-9">
-					                <div class="input-group">
-						                <span class="input-group-addon">
-						                	<i class="fa fa-dollar"></i>
-						                </span>
-						                <input class="form-control" id="exp_priceProduct">
-					              	</div>
-					            </div>
-					        </div>
-					        <div class="form-group">
-					            <label for="exp_totalPrice" class="col-sm-3 control-label">Thành tiền</label>
-					            <div class="col-sm-9">
-					                <div class="input-group">
-						                <span class="input-group-addon">
-						                	<i class="fa fa-dollar"></i>
-						                </span>
-						                <input class="form-control bg-orange" id="exp_totalPrice" disabled>
-					              	</div>
-					            </div>
-					        </div>
-					        <div class="form-group">
-					            <label for="exp_depotNote" class="col-sm-3 control-label">Ghi chú</label>
-					            <div class="col-sm-9">
-					                <textarea rows="3" class="form-control" id="exp_depotNote" placeholder="Nhập thông tin về đơn hàng"></textarea>
-					            </div>
-					        </div>
-					    </div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-rotate-left"></i> Hủy bỏ</button>
-					<button type="button" id="btn_save_exp_depot" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
-				</div>
-		    </div>
-	  	</div>
-	</div>
-	<!-- /Modal Output Depot-->
+<div class="row">
+	@isset ( $total_import)
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box button" id="creditAll">
+            <span class="info-box-icon bg-aqua"><i class="fa fa-opencart"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Tổng Nhập</span>
+                <span class="info-box-number">{{ $total_import }} VND</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    @endisset
+    @isset ( $total_export)
+    <div class="col-md-3 col-sm-6 col-xs-12">
+        <div class="info-box">
+            <span class="info-box-icon bg-red"><i class="fa fa-cart-plus"></i></span>
+            <div class="info-box-content">
+                <span class="info-box-text">Tổng Xuất</span>
+                <span class="info-box-number">{{ $total_export }} VND</span>
+            </div>
+            <!-- /.info-box-content -->
+        </div>
+        <!-- /.info-box -->
+    </div>
+    <!-- /.col -->
+    @endisset
 </div>
+<div class="form-group">
+	<button class="btn btn-primary btn-flat" id="btn_imp_depot" data-toggle="modal" data-target="#input_depot">
+		<i class="fa fa-arrow-down"></i> Nhập hàng
+	</button>
+	<button class="btn btn-success btn-flat" id="btn_exp_depot" data-toggle="modal" data-target="#output_depot">
+		<i class="fa fa-arrow-up"></i> Xuất hàng
+	</button>
+</div>
+<div class="box">
+	<div class="box-header">
+		<h3 class="box-title text-info">Danh sách các đơn hàng</h3>
+	</div>
+	<div class="box-body">
+		<div class="table-responsive">
+			<table id="depots-table" class="table table-bordered table-striped dataTable">
+				<thead>
+					<tr>
+						<td>Mã đơn</td>
+						<td>Người bán(mua)</td>
+						<td>Sản phẩm</td>
+						<td>Bộ nhớ</td>
+						<td>Màu</td>
+						<td>Slượng</td>
+						<td>Clượng</td>
+						<td>Loại</td>
+						<td>Giá</td>
+						<td>Tổng tiền</td>
+						<td>Thanh toán</td>
+						<td>Ghi chú</td>
+						<td>Ngày tạo</td>
+						<td>Đơn nhập</td>
+					</tr>
+				</thead>
+				<tfoot>
+					<tr>
+						<td>Mã đơn</td>
+						<td>Người bán(mua)</td>
+						<td>Sản phẩm</td>
+						<td>Bộ nhớ</td>
+						<td>Màu</td>
+						<td>Slượng</td>
+						<td>Clượng</td>
+						<td>Loại</td>
+						<td>Giá</td>
+						<td>Tổng tiền</td>
+						<td>Thanh toán</td>
+						<td>Ghi chú</td>
+						<td>Ngày tạo</td>
+						<td>Đơn nhập</td>
+					</tr>
+				</tfoot>
+			</table>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Input Depot-->
+<div id="input_depot" class="modal fade" role="dialog">
+  	<div class="modal-dialog">
+    <!-- Modal content-->
+	    <div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title text-green">Thêm mới đơn hàng nhập kho</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+				    <div class="box-body">
+				    	<div class="form-group">
+				        	<label for="saler" class="col-sm-3 control-label">Hàng nhập từ</label>
+				        	<div class="col-sm-9">
+					        	<input type="text" class="form-control" id="saler" placeholder="Nhập người bán">
+		                  	</div>
+				        </div>
+				        <div class="form-group">
+				        	<label for="productName" class="col-sm-3 control-label">Sản phẩm</label>
+				        	<div class="col-sm-9">
+				        		<div id="div_productName" class="col-sm-4 form-group">
+						        	<select class="form-control" id="productName" disabled="true">
+				                  	</select>
+			                  	</div>
+				        		<div id="div_storageProduct" class="col-sm-4 form-group">
+				        			<select class="form-control" id="storageProduct" disabled="true">
+				                  	</select>
+				        		</div>
+				        		<div id="div_qualityProduct" class="col-sm-4 form-group">
+				        			<select class="form-control" id="qualityProduct" disabled="true">
+				                  	</select>
+				        		</div>
+		                  	</div>
+				        </div>
+				        <div class="form-group">
+				        	<label for="colorProduct" class="col-sm-3 control-label">Màu sắc</label>
+				        	<div class="col-sm-9">
+				        		<div id="div_colorProduct" class="col-sm-4 form-group">
+						        	<select class="form-control" id="colorProduct" disabled="true">
+				                  	</select>
+			                  	</div>
+				        		<div id="label_quantityProduct" class="col-sm-4 form-group">
+				        			<label class="control-label">Số lượng</label>
+				        		</div>
+				        		<div id="div_quantityProduct" class="col-sm-4 form-group">
+				                	<input type="number" min="1" value="1" class="form-control" id="quantityProduct">
+				        		</div>
+		                  	</div>
+				        </div>
+				        <div class="form-group">
+				        	<label for="versionProduct" class="col-sm-3 control-label">Phiên bản</label>
+				        	<div class="col-sm-9">
+				        		<div id="div_versionProduct" class="col-sm-4 form-group">
+						        	<select class="form-control" id="versionProduct" disabled="true">
+				                  	</select>
+			                  	</div>
+				        		<div id="label_thanhToan" class="col-sm-4 form-group">
+				        			<label class="control-label">Thanh toán</label>
+				        		</div>
+				        		<div id="div_thanhToan" class="col-sm-4 form-group">
+				                	<select class="form-control" id="thanhToan">
+						        		<option value="0">Tiền mặt</option>
+						        		<option value="1" selected="true">Chuyển khoản</option>
+				                  	</select>
+				        		</div>
+		                  	</div>
+				        </div>
+				        <div class="form-group">
+				            <label for="inputDate" class="col-sm-3 control-label">Ngày nhập</label>
+				            <div class="col-sm-9">
+				                <div class="input-group">
+				                  	<span class="input-group-addon">
+				                    	<i class="fa fa-calendar"></i>
+				                  	</span>
+				                  	<input class="form-control pull-right" value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}" id="inputDate" data-date-format="dd/mm/yyyy">
+				                </div>
+				            </div>
+				        </div>
+				        <div class="form-group">
+				            <label for="priceProduct" class="col-sm-3 control-label">Giá thành</label>
+				            <div class="col-sm-9">
+				                <div class="input-group">
+					                <span class="input-group-addon">
+					                	<i class="fa fa-dollar"></i>
+					                </span>
+					                <input class="form-control" id="priceProduct">
+				              	</div>
+				            </div>
+				        </div>
+				        <div class="form-group">
+				            <label for="totalPrice" class="col-sm-3 control-label">Thành tiền</label>
+				            <div class="col-sm-9">
+				                <div class="input-group">
+					                <span class="input-group-addon">
+					                	<i class="fa fa-dollar"></i>
+					                </span>
+					                <input class="form-control bg-orange" id="totalPrice" disabled>
+				              	</div>
+				            </div>
+				        </div>
+				        <div class="form-group">
+				            <label for="depotNote" class="col-sm-3 control-label">Ghi chú</label>
+				            <div class="col-sm-9">
+				                <textarea rows="3" class="form-control" id="depotNote" placeholder="Nhập thông tin về đơn hàng"></textarea>
+				            </div>
+				        </div>
+				    </div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-rotate-left"></i> Hủy bỏ</button>
+				<button type="button" id="btn_save_imp_depot" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
+			</div>
+	    </div>
+  	</div>
+</div>
+<!-- /Modal Input Depot-->
+
+<!-- Modal Output Depot-->
+<div id="output_depot" class="modal fade" role="dialog">
+  	<div class="modal-dialog">
+    <!-- Modal content-->
+	    <div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal">&times;</button>
+				<h4 class="modal-title text-green">Thêm mới đơn hàng xuất kho</h4>
+			</div>
+			<div class="modal-body">
+				<form class="form-horizontal">
+				    <div class="box-body">
+				    	<div class="form-group">
+				        	<label for="buyer" class="col-sm-3 control-label">Hàng xuất cho</label>
+				        	<div class="col-sm-9">
+					        	<input type="text" class="form-control" id="buyer" placeholder="Nhập người mua">
+		                  	</div>
+				        </div>
+				        <div class="form-group">
+				        	<label for="productName" class="col-sm-3 control-label">Sản phẩm</label>
+				        	<div class="col-sm-9">
+				        		<div id="div_productName" class="col-sm-4 form-group">
+						        	<select class="form-control" id="exp_productName" disabled="true">
+				                  	</select>
+			                  	</div>
+				        		<div id="div_storageProduct" class="col-sm-4 form-group">
+				        			<select class="form-control" id="exp_storageProduct" disabled="true">
+				                  	</select>
+				        		</div>
+				        		<div id="div_qualityProduct" class="col-sm-4 form-group">
+				        			<select class="form-control" id="exp_qualityProduct" disabled="true">
+				                  	</select>
+				        		</div>
+		                  	</div>
+				        </div>
+				        <div class="form-group">
+				        	<label for="colorProduct" class="col-sm-3 control-label">Màu sắc</label>
+				        	<div class="col-sm-9">
+				        		<div id="div_colorProduct" class="col-sm-4 form-group">
+						        	<select class="form-control" id="exp_colorProduct" disabled="true">
+				                  	</select>
+			                  	</div>
+				        		<div id="label_quantityProduct" class="col-sm-4 form-group">
+				        			<label class="control-label">Số lượng</label>
+				        		</div>
+				        		<div id="div_quantityProduct" class="col-sm-4 form-group">
+				                	<input type="number" min="1" value="1" class="form-control" id="exp_quantityProduct">
+				        		</div>
+		                  	</div>
+				        </div>
+				        <div class="form-group">
+				        	<label for="versionProduct" class="col-sm-3 control-label">Phiên bản</label>
+				        	<div class="col-sm-9">
+				        		<div id="div_versionProduct" class="col-sm-4 form-group">
+						        	<select class="form-control" id="exp_versionProduct">
+						        		<option value="0">Lock</option>
+						        		<option value="1" selected="true">Quốc tế</option>
+				                  	</select>
+			                  	</div>
+				        		<div id="label_thanhToan" class="col-sm-4 form-group">
+				        			<label class="control-label">Thanh toán</label>
+				        		</div>
+				        		<div id="div_thanhToan" class="col-sm-4 form-group">
+				                	<select class="form-control" id="exp_thanhToan">
+						        		<option value="0">Tiền mặt</option>
+						        		<option value="1" selected="true">Chuyển khoản</option>
+				                  	</select>
+				        		</div>
+		                  	</div>
+				        </div>
+				        <div class="form-group">
+				            <label for="exp_date" class="col-sm-3 control-label">Ngày xuất</label>
+				            <div class="col-sm-9">
+				                <div class="input-group">
+				                  	<span class="input-group-addon">
+				                    	<i class="fa fa-calendar"></i>
+				                  	</span>
+				                  	<input class="form-control pull-right" value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}" id="exp_date" data-date-format="dd/mm/yyyy">
+				                </div>
+				            </div>
+				        </div>
+				        <div class="form-group">
+				            <label for="exp_priceProduct" class="col-sm-3 control-label">Giá thành</label>
+				            <div class="col-sm-9">
+				                <div class="input-group">
+					                <span class="input-group-addon">
+					                	<i class="fa fa-dollar"></i>
+					                </span>
+					                <input class="form-control" id="exp_priceProduct">
+				              	</div>
+				            </div>
+				        </div>
+				        <div class="form-group">
+				            <label for="exp_totalPrice" class="col-sm-3 control-label">Thành tiền</label>
+				            <div class="col-sm-9">
+				                <div class="input-group">
+					                <span class="input-group-addon">
+					                	<i class="fa fa-dollar"></i>
+					                </span>
+					                <input class="form-control bg-orange" id="exp_totalPrice" disabled>
+				              	</div>
+				            </div>
+				        </div>
+				        <div class="form-group">
+				            <label for="exp_depotNote" class="col-sm-3 control-label">Ghi chú</label>
+				            <div class="col-sm-9">
+				                <textarea rows="3" class="form-control" id="exp_depotNote" placeholder="Nhập thông tin về đơn hàng"></textarea>
+				            </div>
+				        </div>
+				    </div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-rotate-left"></i> Hủy bỏ</button>
+				<button type="button" id="btn_save_exp_depot" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
+			</div>
+	    </div>
+  	</div>
+</div>
+<!-- /Modal Output Depot-->
 @endsection
 
 @section('lib_js_ext')
@@ -561,7 +607,35 @@ table#depots-table thead tr td {
 		        "sortAscending":  "{{ trans('datatables.aria.sortAscending') }}",
 		        "sortDescending": "{{ trans('datatables.aria.sortDescending') }}"
 		    }
-		}
+		},
+		columns: [
+            {data: 'id', name: 'id'},
+            {data: 'saler', name: 'saler'},
+            {data: 'product_name', name: 'product_name'},
+            {data: 'storage_product', name: 'storage_product'},
+            {data: 'color_product', name: 'color_product'},
+            {data: 'quantity_product', name: 'quantity_product'},
+            {data: 'quality_product', name: 'quality_product'},
+            {data: 'version', name: 'version'},
+            {data: 'price_product', name: 'price_product'},
+            {data: 'total_price', name: 'total_price'},
+            {data: 'pay_type', name: 'pay_type'},
+            {data: 'depot_note', name: 'depot_note'},
+            {data: 'input_date', name: 'input_date'},
+            {data: 'is_input_depot', name: 'is_input_depot'}
+        ],
+		initComplete: function () {
+            this.api().columns().every(function () {
+                var column = this;
+                var input = document.createElement("input");
+                $(input).appendTo($(column.footer()).empty())
+                .on('change', function () {
+                    var val = $.fn.dataTable.util.escapeRegex($(this).val());
+
+                    column.search(val ? val : '', true, false).draw();
+                });
+            });
+        }
     });
 
     $('#productName').on('change', function(){
