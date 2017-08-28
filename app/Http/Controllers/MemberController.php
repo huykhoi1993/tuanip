@@ -147,6 +147,11 @@ class MemberController extends Controller
         ]);
     }
 
+    public function getMember(Request $request, $id)
+    {   
+        echo $id;
+    }
+    
 	public function getMembers()
 	{
 		$members = DB::table('members')
@@ -177,5 +182,16 @@ class MemberController extends Controller
                     ->get();
 
         return response()->json($members);
+    }
+
+    public function getDebtOfMember(Request $request)
+    {
+        $id = $request->input('id');
+        $debt = DB::table('members')
+                    ->select('debt')
+                    ->where('id','=', $id)
+                    ->first();
+
+        return response()->json($debt);
     }
 }

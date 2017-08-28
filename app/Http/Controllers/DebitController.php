@@ -136,10 +136,10 @@ class DebitController extends Controller
                         'debits.id',
                         DB::raw("CONCAT(members.member_name,' - (',members.member_phone, ')') as member_name"),
                         'debits.total_amount',
-                        'debits.is_dedit',
-                        'debits.pay_done',
+                        DB::raw('CASE debits.is_dedit WHEN 0 THEN "Công" WHEN 1 THEN "Nợ" END AS is_dedit'),
+                        DB::raw('CASE debits.pay_done WHEN 0 THEN "Chưa" WHEN 1 THEN "Đã thanh toán" END AS pay_done'),
                         'debits.debit_note',
-                        'debits.created_at'
+                        DB::raw("DATE_FORMAT(debits.created_at, '%d/%m/%Y') AS created_at")
                     )
                     ->get();
 
@@ -148,13 +148,7 @@ class DebitController extends Controller
                 return number_format($depot->total_amount, 0, ",", ".");
             })
             ->editColumn('is_dedit', function ($debit) {
-                return $debit->is_dedit == 1 ? 'Nợ' : '<b>Công</b>';
-            })
-            ->editColumn('pay_done', function ($debit) {
-                return $debit->pay_done == 1 ? 'Đã thanh toán' : 'Chưa';
-            })
-            ->editColumn('created_at', function ($product) {
-                return $product->created_at ? with(new Carbon($product->created_at))->format('d/m/Y') : '';
+                return $debit->is_dedit != 'Công' ? 'Nợ' : '<b>' . $debit->is_dedit .'</b>';
             })
             ->removeColumn('member_phone')
             ->rawColumns(['is_dedit'])

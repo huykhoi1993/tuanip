@@ -59,6 +59,20 @@
                 </ul>
             </li>
             <!-- End Users management -->
+            <!-- Statistic -->
+            <li class="treeview">
+                <a href="#">
+                    <i class="fa fa-building-o"></i> <span>Thống kê chi tiết</span>
+                    <span class="pull-right-container">
+                    <i class="fa fa-angle-left pull-right"></i>
+                    </span>
+                </a>
+                <ul class="treeview-menu">
+                    <li><a href="{{ route('statistic.products') }}"><i class="fa fa-users"></i> Thống kê sản phẩm</a></li>
+                    <li><a href="{{ route('debits.index') }}"><i class="fa fa-bank"></i> Thống kê Công Nợ</a></li>
+                </ul>
+            </li>
+            <!-- End Statistic -->
         </ul>
     </section>
     <!-- /.sidebar -->

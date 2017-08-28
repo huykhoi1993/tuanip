@@ -8,6 +8,86 @@ use DB;
 class StatisticController extends Controller
 {
     
+    public function products()
+    {
+    	// Lấy tổng các sản phẩm có trong kho
+    	$total_all_products = DB::table('products')
+    		->select(
+    			DB::raw('sum(quantity_in_stock) as total_all_products')
+			)
+    		->get();
+
+		// Lấy tổng các sản phẩm có trong kho là phiên bản quốc tế
+    	$total_all_products_is_quocte = DB::table('products')
+    		->select(
+    			DB::raw('sum(quantity_in_stock) as total_all_products_is_quocte')
+			)
+			->where([
+				['is_quocte', '=', 1]
+			])
+    		->get();
+
+		// Lấy tổng các sản phẩm có trong kho là phiên bản lock
+    	$total_all_products_is_lock = DB::table('products')
+    		->select(
+    			DB::raw('sum(quantity_in_stock) as total_all_products_is_lock')
+			)
+			->where([
+				['is_quocte', '=', 0]
+			])
+    		->get();
+    	
+    	// Lấy tổng của từng nhóm sản phẩm
+    	$total_every_products = DB::table('products')
+    		->select(
+    			'product_name',
+    			DB::raw('sum(quantity_in_stock) as total_products')
+			)
+			->groupBy('product_name')
+			->get();
+
+		// Lấy chi tiết từng sản phẩm theo phiên bản quốc tế
+		$detail_products_is_quocte = DB::table('products')
+    		->select(
+    			'product_name',
+    			DB::raw('sum(quantity_in_stock) as total_products')
+			)
+			->where([
+				['is_quocte', '=', 1] 
+			])
+			->groupBy('product_name')
+			->get();
+
+		// Lấy chi tiết từng sản phẩm theo phiên bản lock
+		$detail_products_is_lock = DB::table('products')
+    		->select(
+    			'product_name',
+    			DB::raw('sum(quantity_in_stock) as total_products')
+			)
+			->where([
+				['is_quocte', '=', 0] 
+			])
+			->groupBy('product_name')
+			->get();
+
+		// return response()->json([
+		// 	'total_all_products' 			=> $total_all_products,
+		// 	'total_all_products_is_quocte' 	=> $total_all_products_is_quocte,
+		// 	'total_all_products_is_lock' 	=> $total_all_products_is_lock,
+		// 	'total_every_products' 			=> $total_every_products,
+		// 	'detail_products_is_quocte' 	=> $detail_products_is_quocte,
+		// 	'detail_products_is_lock' 		=> $detail_products_is_lock
+		// ]);
+    	return view('admin.statistic_product',[
+			'total_all_products' 			=> $total_all_products,
+			'total_all_products_is_quocte' 	=> $total_all_products_is_quocte,
+			'total_all_products_is_lock' 	=> $total_all_products_is_lock,
+			'total_every_products' 			=> $total_every_products,
+			'detail_products_is_quocte' 	=> $detail_products_is_quocte,
+			'detail_products_is_lock' 		=> $detail_products_is_lock
+		]);
+    }
+
     public function getAllProducts()
     {
     	// Lấy tổng các sản phẩm có trong kho
@@ -26,22 +106,35 @@ class StatisticController extends Controller
 			->groupBy('product_name')
 			->get();
 
-		// Lấy chi tiết từng sản phẩm
-		$detail_products = DB::table('products')
+		// Lấy chi tiết từng sản phẩm theo phiên bản quốc tế
+		$detail_products_is_quocte = DB::table('products')
     		->select(
     			'product_name',
-    			'color_product',
-    			'storage_product',
-    			'quality_product',
-    			'is_quocte',
-    			'quantity_in_stock'
+    			DB::raw('sum(quantity_in_stock) as total_products')
 			)
+			->where([
+				['is_quocte', '=', 1] 
+			])
+			->groupBy('product_name')
+			->get();
+
+		// Lấy chi tiết từng sản phẩm theo phiên bản lock
+		$detail_products_is_lock = DB::table('products')
+    		->select(
+    			'product_name',
+    			DB::raw('sum(quantity_in_stock) as total_products')
+			)
+			->where([
+				['is_quocte', '=', 0] 
+			])
+			->groupBy('product_name')
 			->get();
 
 		return response()->json([
-			'total_all_products' => $total_all_products,
-			'total_every_products' => $total_every_products,
-			'detail_products' => $detail_products
+			'total_all_products' 		=> $total_all_products,
+			'total_every_products' 		=> $total_every_products,
+			'detail_products_is_quocte' => $detail_products_is_quocte,
+			'detail_products_is_lock' 	=> $detail_products_is_lock
 		]);
     }
 

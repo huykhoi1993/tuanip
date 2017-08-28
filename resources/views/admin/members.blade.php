@@ -415,6 +415,9 @@ div.radio label {
 				$('#info_guest').modal('toggle');
 				$('#members-table').DataTable().ajax.reload();
 			}
+			else {
+				alert('Không thể xóa được khách hàng này, vì đã có dữ liệu công nợ');
+			}
 		});
 	});
 @endsection

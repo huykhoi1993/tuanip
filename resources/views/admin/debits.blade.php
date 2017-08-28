@@ -97,12 +97,11 @@ div.radio label {
 
 	<div class="form-group">
 		<button class="btn btn-primary btn-flat" id="btn_add_debit" data-toggle="modal" data-target="#create_debit"><i class="fa fa-calendar-plus-o"></i> Thêm mới</button>
-		<button class="btn btn-success btn-flat" id="btn_pay_debit" data-toggle="modal" data-target="#pay_debit"><i class="fa fa-money"></i> Thanh toán</button>
 	</div>
 
 	<div class="box">
 		<div class="box-header">
-			<h3 class="box-title">Danh sách các công nợ</h3>
+			<h3 class="box-title">Danh sách các Công - Nợ</h3>
 		</div>
 		<div class="box-body">
 			<div class="table-responsive">
@@ -212,76 +211,6 @@ div.radio label {
 	  	</div>
 	</div>
 	<!-- End Modal Create-->
-
-	<!-- Modal Pay-->
-	<div id="pay_debit" class="modal fade" role="dialog">
-	  	<div class="modal-dialog">
-	    <!-- Modal content-->
-		    <div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title text-green">Thanh toán Công - Nợ</h4>
-				</div>
-				<div class="modal-body">
-					<form class="form-horizontal">
-					    <div class="box-body">
-					        <div class="form-group">
-								<label for="pay_guestName" class="col-sm-3 control-label">Tên khách hàng</label>
-								<div class="col-sm-9">
-									<select id="pay_guestName" class="form-control select2" style="width: 100%;">
-									</select>
-								</div>
-					        </div>
-					        <div class="form-group">
-								<label for="pay_payMoney" class="col-sm-3 control-label">Số tiền</label>
-								<div class="col-sm-9">
-									<input value="0" class="form-control" id="pay_payMoney">
-								</div>
-					        </div>
-					        <div class="form-group">
-								<label for="isDebit" class="col-sm-3 control-label">Hình thức</label>
-								<div class="radio col-sm-9">
-									<div class="col-sm-4">
-							        	<label>
-							            	<input type="radio" value="0" name="isDebit" checked> Công
-							        	</label>
-						        	</div>
-						        	<div class="col-sm-4">
-							        	<label>
-								            <input type="radio" value="1" name="isDebit"> Nợ
-							        	</label>
-						        	</div>
-							    </div>
-					        </div>
-					        <div class="form-group">
-								<label for="pay_moneyPay" class="col-sm-3 control-label">Số tiền</label>
-								<div class="radio col-sm-9">
-									<input class="form-control" name="pay_moneyPay" id="pay_moneyPay">
-							    </div>
-					        </div>
-					        <div class="form-group">
-								<label for="pay_dateDone" class="col-sm-3 control-label">Ngày quyết toán</label>
-								<div class="col-sm-9">
-									<input type="text" class="form-control" id="pay_dateDone" value="{{ \Carbon\Carbon::now()->format('d/m/Y') }}" data-date-format="dd/mm/yyyy">
-								</div>
-					        </div>
-					        <div class="form-group">
-								<label for="pay_note" class="col-sm-3 control-label">Ghi chú</label>
-								<div class="col-sm-9">
-									<textarea rows="4" type="text" class="form-control" id="pay_note" placeholder="Ghi chú về đợt thanh toán công nợ này (nếu có)"></textarea>
-								</div>
-					        </div>
-					    </div>
-					</form>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default btn-flat pull-left" data-dismiss="modal"><i class="fa fa-rotate-left"></i> Hủy bỏ</button>
-					<button type="button" id="btn_save_pay" class="btn btn-default btn-flat btn-success"><i class="fa fa-save"></i> Lưu</button>
-				</div>
-		    </div>
-	  	</div>
-	</div>
-	<!-- End Modal Pay-->
 @endsection
 
 @section('lib_js_ext')
@@ -342,10 +271,31 @@ div.radio label {
 			}
 		}
 	});
+
+	$('#pay_guestName').select2({
+		language: 'vi',
+		placeholder: 'Nhập tên khách hàng',
+		ajax: {
+			url: '{{ route('membersname') }}',
+			cache: true,
+			dataType: 'json',
+			delay: 300,
+			processResults: function(data) {
+				return {
+					results: $.map(data, function(item) {
+						return {
+	                        text: item.member_name +  ' - ' + item.member_phone,
+	                        id: item.id
+	                    }
+					})
+				}
+			}
+		}
+	});
 	{{-- End Setup Select2 --}}
 
 	{{-- Setup InputMask --}}
-	$('#payMoney, #pay_moneyPay').inputmask("numeric", {
+	$('#payMoney').inputmask("numeric", {
 		radixPoint: "",
 	    groupSeparator: ".",
 	    autoGroup: true,
@@ -390,7 +340,7 @@ div.radio label {
             {data: 'total_amount', name: 'total_amount'},
             {data: 'is_dedit', name: 'is_dedit'},
             {data: 'pay_done', name: 'pay_done'},
-            {data: 'debit_note', name: 'debit_note'},
+            {data: 'debit_note', name: 'debit_note', width: '50%'},
             {data: 'created_at', name: 'created_at'}
         ],
         initComplete: function () {
@@ -407,7 +357,6 @@ div.radio label {
         }
     });
     {{-- End Datatables --}}
-
 
 	$('#btn_save_debit').on('click', function(){
 		let id 		  = $('#guestName').val();
@@ -444,7 +393,7 @@ div.radio label {
 			$('#debits-table').DataTable().ajax.reload();
 		});
 	});
-
+	
 	$('#creditAll').on('click', function(){
 	});
 @endsection
