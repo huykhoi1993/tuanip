@@ -40,8 +40,6 @@
                 </a>
                 <ul class="treeview-menu">
                     <li><a href="{{ route('depots.index') }}"><i class="fa fa-info"></i> Danh sách đơn hàng</a></li>
-                    <li><a href="{{ url('/admin/product') }}"><i class="fa fa-arrow-down"></i> Nhập sản phẩm</a></li>
-                    <li><a href="{{ url('/admin/category') }}"><i class="fa fa-arrow-up"></i> xuất sản phẩm</a></li>
                 </ul>
             </li>
             <!-- End Depot management -->

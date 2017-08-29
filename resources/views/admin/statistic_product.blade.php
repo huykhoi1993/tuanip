@@ -37,9 +37,9 @@ table#products-table thead tr td,
 @section('content')
 	<div class="row">
 		<div class="col-md-6 col-sm-12 col-xs-12">
-	        <div class="box box-success">
+	        <div class="box box-info">
 	            <div class="box-header with-border">
-					<h3 class="box-title">Toàn bộ sản phẩm</h3>
+					<h3 class="box-title">Tổng kho toàn bộ sản phẩm</h3>
 					<div class="box-tools pull-right">
 						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
 						</button>
@@ -48,7 +48,7 @@ table#products-table thead tr td,
 	            </div>
 	            <div class="box-body">
 					<div class="chart">
-						<canvas id="chart_all_products"></canvas>
+						<canvas id="total_all_products"></canvas>
 					</div>
 	            </div>
             <!-- /.box-body -->
@@ -56,7 +56,7 @@ table#products-table thead tr td,
 	    </div>
 	    <!-- /.col -->
 	    <div class="col-md-6 col-sm-12 col-xs-12">
-	        <div class="box box-success">
+	        <div class="box box-primary">
 	            <div class="box-header with-border">
 					<h3 class="box-title">Thống kê với các loại</h3>
 					<div class="box-tools pull-right">
@@ -68,6 +68,46 @@ table#products-table thead tr td,
 	            <div class="box-body">
 					<div class="chart">
 						<canvas id="chart_every_type"></canvas>
+					</div>
+	            </div>
+            <!-- /.box-body -->
+          	</div>
+	    </div>
+	    <!-- /.col -->
+	</div>
+	<div class="row">
+		<div class="col-md-6 col-sm-12 col-xs-12">
+	        <div class="box box-success">
+	            <div class="box-header with-border">
+					<h3 class="box-title">Tổng kho phiên bản Quốc tế</h3>
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+						</button>
+						<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+					</div>
+	            </div>
+	            <div class="box-body">
+					<div class="chart">
+						<canvas id="chart_product_details_int"></canvas>
+					</div>
+	            </div>
+            <!-- /.box-body -->
+          	</div>
+	    </div>
+	    <!-- /.col -->
+	    <div class="col-md-6 col-sm-12 col-xs-12">
+	        <div class="box box-warning">
+	            <div class="box-header with-border">
+					<h3 class="box-title">Tổng kho phiên bản Lock</h3>
+					<div class="box-tools pull-right">
+						<button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+						</button>
+						<button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+					</div>
+	            </div>
+	            <div class="box-body">
+					<div class="chart">
+						<canvas id="chart_product_details_lock"></canvas>
 					</div>
 	            </div>
             <!-- /.box-body -->
@@ -89,13 +129,89 @@ table#products-table thead tr td,
 
 @section('js_ext')
 {
+    var pieChartCanvas = $('#total_all_products').get(0).getContext('2d')
+    var pieChart       = new Chart(pieChartCanvas)
+    var PieData        = [];
+    @isset ($total_all_products_is_quocte)
+    PieData.push({
+		value    : {{ $total_all_products_is_quocte[0]->total_all_products_is_quocte }},
+        color    : '#00a65a',
+        highlight: '#00a65a',
+        label    : '{{ Config::get('array.VERSIONS.1')}}'
+    });
+    @endisset
+    @isset ($total_all_products_is_lock)
+    PieData.push({
+		value    : {{ $total_all_products_is_lock[0]->total_all_products_is_lock }},
+        color    : '#ffb74d',
+        highlight: '#ffb74d',
+        label    : '{{ Config::get('array.VERSIONS.0')}}'
+    });
+    @endisset
+      
+    var pieOptions     = {
+      	animateRotate        : true,
+		animateScale         : true,
+		tooltipTemplate		 : "<%= label %>: <%= value %>",
+		tooltipFillColor 	 : "rgba(0,0,0,0)",
+		tooltipFontColor 	 : "#000000",
+	    onAnimationComplete: function()
+	    {
+	        this.showTooltip(this.segments, true);
+	    },
+	    tooltipEvents: [],
+	    showTooltips: true
+    }
+
+    pieChart.Pie(PieData, pieOptions)
+}
+@isset ($total_every_products)
+{
 	var labels = [];
 	var data = [];
     @foreach ($total_every_products as $product)
     	labels.push('{{ $product->product_name }}');
     	data.push('{{ $product->total_products }}');
     @endforeach
-    var barChartCanvas 	 = $('#chart_all_products').get(0).getContext('2d')
+    var barChartCanvas 	 = $('#chart_every_type').get(0).getContext('2d')
+    var chart_every_type = new Chart(barChartCanvas)
+    var barChartData 	 = {
+		labels  : labels,
+		datasets: [
+			{
+				label 		: 'Cái',
+				fillColor	: '#1976d2',
+				strokeColor	: '#1976d2',
+				pointColor	: '#1976d2',
+				data 		: data
+			}
+		]
+    }
+    var barChartOptions = {
+		animation: false,
+	    responsive : true,
+	    tooltipTemplate: "<%= value %>",
+	    tooltipFillColor: "rgba(0,0,0,0)",
+	    tooltipFontColor: "#616161",
+	    tooltipEvents: [],
+	    tooltipCaretSize: 0,
+	    onAnimationComplete: function()
+	    {
+	        this.showTooltip(this.datasets[0].bars, true);
+	    }
+    }
+    chart_every_type.Bar(barChartData, barChartOptions)
+}
+@endisset
+@isset ( $detail_products_is_quocte)
+{
+	var labels = [];
+	var data = [];
+    @foreach ($detail_products_is_quocte as $product)
+    	labels.push('{{ $product->product_name }}');
+    	data.push('{{ $product->total_products }}');
+    @endforeach
+    var barChartCanvas 	 = $('#chart_product_details_int').get(0).getContext('2d')
     var chart_every_type = new Chart(barChartCanvas)
     var barChartData 	 = {
 		labels  : labels,
@@ -124,24 +240,25 @@ table#products-table thead tr td,
     }
     chart_every_type.Bar(barChartData, barChartOptions)
 }
-@isset ($total_every_products)
+@endisset
+@isset ( $detail_products_is_lock)
 {
 	var labels = [];
 	var data = [];
-    @foreach ($total_every_products as $product)
+    @foreach ($detail_products_is_lock as $product)
     	labels.push('{{ $product->product_name }}');
     	data.push('{{ $product->total_products }}');
     @endforeach
-    var barChartCanvas 	 = $('#chart_every_type').get(0).getContext('2d')
+    var barChartCanvas 	 = $('#chart_product_details_lock').get(0).getContext('2d')
     var chart_every_type = new Chart(barChartCanvas)
     var barChartData 	 = {
 		labels  : labels,
 		datasets: [
 			{
 				label 		: 'Cái',
-				fillColor	: '#00a65a',
-				strokeColor	: '#00a65a',
-				pointColor	: '#00a65a',
+				fillColor	: '#ffb74d',
+				strokeColor	: '#ffb74d',
+				pointColor	: '#ffb74d',
 				data 		: data
 			}
 		]

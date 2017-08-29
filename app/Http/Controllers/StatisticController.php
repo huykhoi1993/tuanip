@@ -10,13 +10,6 @@ class StatisticController extends Controller
     
     public function products()
     {
-    	// Lấy tổng các sản phẩm có trong kho
-    	$total_all_products = DB::table('products')
-    		->select(
-    			DB::raw('sum(quantity_in_stock) as total_all_products')
-			)
-    		->get();
-
 		// Lấy tổng các sản phẩm có trong kho là phiên bản quốc tế
     	$total_all_products_is_quocte = DB::table('products')
     		->select(
@@ -71,7 +64,6 @@ class StatisticController extends Controller
 			->get();
 
 		// return response()->json([
-		// 	'total_all_products' 			=> $total_all_products,
 		// 	'total_all_products_is_quocte' 	=> $total_all_products_is_quocte,
 		// 	'total_all_products_is_lock' 	=> $total_all_products_is_lock,
 		// 	'total_every_products' 			=> $total_every_products,
@@ -79,7 +71,6 @@ class StatisticController extends Controller
 		// 	'detail_products_is_lock' 		=> $detail_products_is_lock
 		// ]);
     	return view('admin.statistic_product',[
-			'total_all_products' 			=> $total_all_products,
 			'total_all_products_is_quocte' 	=> $total_all_products_is_quocte,
 			'total_all_products_is_lock' 	=> $total_all_products_is_lock,
 			'total_every_products' 			=> $total_every_products,
