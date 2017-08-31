@@ -338,7 +338,7 @@ div.radio label {
             {data: 'id', name: 'id'},
             {data: 'member_name', name: 'member_name'},
             {data: 'total_amount', name: 'total_amount'},
-            {data: 'is_dedit', name: 'is_dedit'},
+            {data: 'is_debit', name: 'is_debit'},
             {data: 'pay_done', name: 'pay_done'},
             {data: 'debit_note', name: 'debit_note', width: '50%'},
             {data: 'created_at', name: 'created_at'}

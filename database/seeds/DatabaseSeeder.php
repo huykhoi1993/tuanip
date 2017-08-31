@@ -29,28 +29,20 @@ class DatabaseSeeder extends Seeder
             ]);
         }
 
-        foreach (range(1,30) as $index) {
+        foreach (range(1,300) as $index) {
+            $is_debit = rand(0,1);
+            $p = $is_debit == 1 ? -1 : 1; 
+
             DB::table('debits')->insert([
                 'member_id'     => rand(1,100),
-                'total_amount'  => $faker->numberBetween(5, 1000) * 10000,
-                'is_dedit'      => 0,
+                'total_amount'  => $faker->numberBetween(5, 1000) * 10000 * $p,
+                'is_debit'      => $is_debit,
                 'pay_done'      => rand(0,1),
                 'debit_note'    => $faker->text(150),
-                'created_at'    => Carbon::now(),
-                'updated_at'    => Carbon::now()
+                'created_at'    => Carbon::now()->addDays(($index % 60) - 5),
+                'updated_at'    => Carbon::now()->addDays(($index % 60) - 5)
             ]);
         }
 
-        foreach (range(1,30) as $index) {
-            DB::table('debits')->insert([
-                'member_id'     => rand(1,100),
-                'total_amount'  => $faker->numberBetween(5, 1000) * 10000 * -1,
-                'is_dedit'      => 1,
-                'pay_done'      => rand(0,1),
-                'debit_note'    => $faker->text(150),
-                'created_at'    => Carbon::now(),
-                'updated_at'    => Carbon::now()
-            ]);
-        }
     }
 }

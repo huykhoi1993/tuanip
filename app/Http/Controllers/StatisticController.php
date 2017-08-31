@@ -4,9 +4,47 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DB;
+use Carbon\Carbon;
 
 class StatisticController extends Controller
 {
+    public function debits()
+	{
+		$results_this_month = DB::table('debits')
+					->select(
+						DB::raw('DATE_FORMAT(debits.created_at, "%d/%m/%Y") AS day')
+						,DB::raw('sum(if(is_debit = 1, total_amount, 0)) as total_debits')
+						,DB::raw('sum(if(is_debit = 0, total_amount, 0)) as total_credits')
+					)
+					->where([
+						// ['is_debit', '=', 1],
+						[DB::raw('MONTH(created_at)'), '=', Carbon::now()->month]
+					])
+					->groupBy('day')
+					->orderBy('day')
+					->get();
+
+		$top_10_no_pay_credit = DB::table('debits')
+								->select(
+									'member_id',
+									DB::raw('sum(total_amount) AS total_amount')
+								)
+								->where([
+									['is_debit', '=', 0],
+									['pay_done', '=', 0]
+								])
+								->groupBy('member_id')
+								->orderBy('total_amount', 'DESC')
+								->limit(10)
+								->get();
+
+		// return response()->json($top_10_no_pay_credit);
+
+		return view('admin.statistic_debit',[
+			'results_this_month' 	=> $results_this_month,
+			'top_10_no_pay_credit' 	=> $top_10_no_pay_credit
+		]);
+	}
     
     public function products()
     {

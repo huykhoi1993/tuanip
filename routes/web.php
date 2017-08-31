@@ -83,6 +83,7 @@
 
         Route::group(['prefix' => 'statistic'], function(){
             Route::get('/products', 'StatisticController@products')->name('statistic.products');
+            Route::get('/debits', 'StatisticController@debits')->name('statistic.debits');
             Route::get('/', 'StatisticController@index')->name('statistic.index');
             Route::get('/getallproducts', 'StatisticController@getAllProducts')->name('statistic.getallproducts');
             Route::get('/gettotalmoneyimport', 'StatisticController@getTotalMoneyImport')->name('statistic.gettotalmoneyimport');

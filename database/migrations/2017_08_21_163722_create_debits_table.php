@@ -18,7 +18,7 @@ class CreateDebitsTable extends Migration
             $table->Increments('id');
             $table->smallInteger('member_id')->unsigned();;
             $table->integer('total_amount');
-            $table->boolean('is_dedit')->default(true); //là nợ
+            $table->boolean('is_debit')->default(true); //là nợ
             $table->boolean('pay_done')->default(false);
             $table->string('debit_note')->nullable();
             $table->timestamps();

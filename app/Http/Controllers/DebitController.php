@@ -13,10 +13,10 @@ class DebitController extends Controller
     {
         $results = DB::table('debits')
                     ->select(
-                        DB::raw('sum(case when is_dedit = 0 then total_amount else 0 end) as total_credit'),
-                        DB::raw('sum(case when is_dedit = 0 and pay_done = 0 then total_amount else 0 end) as total_credit_no_pay'),
-                        DB::raw('sum(case when is_dedit = 1 then total_amount else 0 end) as total_dedit'),
-                        DB::raw('sum(case when is_dedit = 1 and pay_done = 0 then total_amount else 0 end) as total_dedit_no_pay')
+                        DB::raw('sum(case when is_debit = 0 then total_amount else 0 end) as total_credit'),
+                        DB::raw('sum(case when is_debit = 0 and pay_done = 0 then total_amount else 0 end) as total_credit_no_pay'),
+                        DB::raw('sum(case when is_debit = 1 then total_amount else 0 end) as total_dedit'),
+                        DB::raw('sum(case when is_debit = 1 and pay_done = 0 then total_amount else 0 end) as total_dedit_no_pay')
                     )
                     ->get();
 
@@ -52,7 +52,7 @@ class DebitController extends Controller
                     ->insert([
                         'member_id'     => $member_id,
                         'total_amount'  => $payMoney,
-                        'is_dedit'      => 1,
+                        'is_debit'      => 1,
                         'pay_done'      => $done,
                         'debit_note'    => $note,
                         'created_at'    => Carbon::createFromFormat('d/m/Y', $datedone)->toDateString(),
@@ -86,7 +86,7 @@ class DebitController extends Controller
                     ->insert([
                         'member_id'     => $member_id,
                         'total_amount'  => $payMoney,
-                        'is_dedit'      => 0,
+                        'is_debit'      => 0,
                         'pay_done'      => $done,
                         'debit_note'    => $note,
                         'created_at'    => Carbon::createFromFormat('d/m/Y', $datedone)->toDateString(),
@@ -136,7 +136,7 @@ class DebitController extends Controller
                         'debits.id',
                         DB::raw("CONCAT(members.member_name,' - (',members.member_phone, ')') as member_name"),
                         'debits.total_amount',
-                        DB::raw('CASE debits.is_dedit WHEN 0 THEN "Công" WHEN 1 THEN "Nợ" END AS is_dedit'),
+                        DB::raw('CASE debits.is_debit WHEN 0 THEN "Công" WHEN 1 THEN "Nợ" END AS is_debit'),
                         DB::raw('CASE debits.pay_done WHEN 0 THEN "Chưa" WHEN 1 THEN "Đã thanh toán" END AS pay_done'),
                         'debits.debit_note',
                         DB::raw("DATE_FORMAT(debits.created_at, '%d/%m/%Y') AS created_at")
@@ -147,11 +147,11 @@ class DebitController extends Controller
             ->editColumn('total_amount', function ($depot) {
                 return number_format($depot->total_amount, 0, ",", ".");
             })
-            ->editColumn('is_dedit', function ($debit) {
-                return $debit->is_dedit != 'Công' ? 'Nợ' : '<b>' . $debit->is_dedit .'</b>';
+            ->editColumn('is_debit', function ($debit) {
+                return $debit->is_debit != 'Công' ? 'Nợ' : '<b>' . $debit->is_debit .'</b>';
             })
             ->removeColumn('member_phone')
-            ->rawColumns(['is_dedit'])
+            ->rawColumns(['is_debit'])
             ->make(true);
 
         return $datatables;
