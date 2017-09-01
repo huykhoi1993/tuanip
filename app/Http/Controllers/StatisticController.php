@@ -25,24 +25,41 @@ class StatisticController extends Controller
 					->get();
 
 		$top_10_no_pay_credit = DB::table('debits')
+								->join('members', 'members.id', '=', 'debits.id')
 								->select(
-									'member_id',
+									'member_name',
 									DB::raw('sum(total_amount) AS total_amount')
 								)
 								->where([
 									['is_debit', '=', 0],
 									['pay_done', '=', 0]
 								])
-								->groupBy('member_id')
+								->groupBy('member_name')
 								->orderBy('total_amount', 'DESC')
 								->limit(10)
 								->get();
 
-		// return response()->json($top_10_no_pay_credit);
+		$top_10_no_pay_debit = DB::table('debits')
+								->join('members', 'members.id', '=', 'debits.id')
+								->select(
+									'member_name',
+									DB::raw('sum(-total_amount) AS total_amount')
+								)
+								->where([
+									['is_debit', '=', 1],
+									['pay_done', '=', 0]
+								])
+								->groupBy('member_name')
+								->orderBy('total_amount', 'DESC')
+								->limit(10)
+								->get();
+
+		// return response()->json($top_10_no_pay_debit);
 
 		return view('admin.statistic_debit',[
 			'results_this_month' 	=> $results_this_month,
-			'top_10_no_pay_credit' 	=> $top_10_no_pay_credit
+			'top_10_no_pay_credit' 	=> $top_10_no_pay_credit,
+			'top_10_no_pay_debit' 	=> $top_10_no_pay_debit
 		]);
 	}
     

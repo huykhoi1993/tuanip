@@ -88,7 +88,7 @@ table#products-table thead tr td,
 	            </div>
 	            <div class="box-body">
 					<div class="chart">
-						<canvas id="chart_every_type"></canvas>
+						<canvas id="top_10_no_pay_debit"></canvas>
 					</div>
 	            </div>
             <!-- /.box-body -->
@@ -167,11 +167,46 @@ table#products-table thead tr td,
 	var data = [];
 
 	@foreach ($top_10_no_pay_credit as $credit)
-		labels.push('{{ $credit->member_id }}');
+		labels.push('{{ $credit->member_name }}');
 		data.push({{ $credit->total_amount }});
 	@endforeach
 
 	var barChartCanvas 	 = $('#top_10_no_pay_credit').get(0).getContext('2d')
+    var chart_every_type = new Chart(barChartCanvas)
+    var barChartData 	 = {
+		labels  : labels,
+		datasets: [
+			{
+				label 		: 'Cái',
+				fillColor	: '#00A65A',
+				strokeColor	: '#00A65A',
+				pointColor	: '#00A65A',
+				data 		: data
+			}
+		]
+    }
+    var barChartOptions = {
+    	scaleLabel: function (label) {
+	    	return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+		},
+    	tooltipTemplate: function(label){
+    		return label.label + ': ' + label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' VNĐ';
+    	}
+    }
+    chart_every_type.Bar(barChartData, barChartOptions)
+}
+@endisset
+@isset($top_10_no_pay_debit)
+{
+	var labels = [];
+	var data = [];
+
+	@foreach ($top_10_no_pay_debit as $debit)
+		labels.push('{{ $debit->member_name }}');
+		data.push({{ $debit->total_amount }});
+	@endforeach
+
+	var barChartCanvas 	 = $('#top_10_no_pay_debit').get(0).getContext('2d')
     var chart_every_type = new Chart(barChartCanvas)
     var barChartData 	 = {
 		labels  : labels,
@@ -186,12 +221,12 @@ table#products-table thead tr td,
 		]
     }
     var barChartOptions = {
-		scaleLabel: function (label) {
+    	scaleLabel: function (label) {
 	    	return label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
 		},
-		multiTooltipTemplate: function(label){
-			return label.datasetLabel + ': ' + label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' VNĐ';
-		}
+    	tooltipTemplate: function(label){
+    		return label.label + ': ' + label.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ' VNĐ';
+    	}
     }
     chart_every_type.Bar(barChartData, barChartOptions)
 }
